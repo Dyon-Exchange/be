@@ -1,0 +1,40 @@
+{
+  "name": "be",
+  "version": "1.0.0",
+  "description": "WineBit backend Koa.js server",
+  "main": "dist/bin/www.js",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "clean": "rm -rf ./dist/",
+    "compile": "tsc && DEBUG=* node ./dist/bin/www.js",
+    "dev": "./node_modules/nodemon/bin/nodemon.js -e ts  --exec \"npm run compile\"",
+    "gcp-build": "tsc -p .",
+    "start": "echo \"This is for PRODUCTION ONLY, use 'npm run dev' for development server'\" && ENV=PROD node ./dist/src/bin/www.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "dependencies": {
+    "debug": "^4.3.1",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.5",
+    "@types/jest": "^26.0.23",
+    "@types/koa": "^2.13.1",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-router": "^7.4.2",
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.7",
+    "supertest": "^6.1.3",
+    "ts-jest": "^26.5.6",
+    "typescript": "^4.2.4"
+  }
+}
