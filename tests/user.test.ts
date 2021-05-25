@@ -64,3 +64,24 @@ test("Test accessing private route with invalid token", async () => {
 
   expect(response.status).toBe(401);
 });
+
+test("Test get user details of current user", async () => {
+  let response = await request(app.callback()).post("/user/login").send({
+    email: "conor@labrys.io",
+    password: "password2021",
+  });
+
+  const { token } = response.body;
+
+  response = await request(app.callback())
+    .get("/user/")
+    .set({
+      Authorization: `Bearer ${token}`,
+    });
+
+  expect(response.body).toHaveProperty("fullName");
+  expect(response.body).toHaveProperty("balance");
+  expect(response.body).toHaveProperty("email");
+  expect(response.status).toBe(200);
+});
+
