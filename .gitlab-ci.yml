@@ -1,0 +1,34 @@
+variables:
+  DOCKER_DRIVER: overlay2
+
+stages:
+  - deploy
+
+# run pipelines on staging or master branches
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "staging"
+
+.deploy_backend:
+  image: "rlancer/gcloud-node:LTS-229"
+  stage: deploy
+  before_script:
+    - npx gae-ayaml-env
+    - echo $DEPLOY_KEY_FILE_PRODUCTION > /tmp/$CI_PIPELINE_ID.json
+    - gcloud auth activate-service-account --key-file /tmp/$CI_PIPELINE_ID.json
+  after_script:
+    - rm /tmp/$CI_PIPELINE_ID.json
+
+deploy_backend_staging_branch:
+  extends: .deploy_backend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+  script:
+    - gcloud --quiet --project cru-world-wine app deploy --no-promote --version $CI_COMMIT_REF_SLUG
+
+deploy_backend_master_branch:
+  extends: .deploy_backend
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+  script:
+    - gcloud --quiet --project cru-world-wine app deploy --promote --version $CI_COMMIT_REF_SLUG
