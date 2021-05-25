@@ -24,6 +24,12 @@ const SALT_ROUNDS = 12;
   },
 })
 export class User extends TimeStamps {
+  @prop({ required: true })
+  public firstName!: string;
+
+  @prop({ required: true })
+  public lastName!: string;
+
   @prop({
     required: true,
     unique: true,
@@ -38,7 +44,11 @@ export class User extends TimeStamps {
   public password!: string;
 
   @prop({ required: true })
-  public balance!: number;
+  public cashBalance!: number;
+
+  public getFullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }
 
 export default getModelForClass(User);

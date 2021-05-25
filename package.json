@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "WineBit backend Koa.js server",
   "main": "dist/bin/www.js",
-  "repository": {"url": "https://gitlab.com/winebit/be"},
+  "repository": {
+    "url": "https://gitlab.com/winebit/be"
+  },
   "scripts": {
     "test": "jest",
     "build": "tsc",
