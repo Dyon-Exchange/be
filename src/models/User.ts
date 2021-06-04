@@ -3,12 +3,18 @@ import {
   modelOptions,
   getModelForClass,
   pre,
+  Severity,
 } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 import isEmail from "validator/lib/isEmail";
 import { hashSync } from "bcrypt";
 
 const SALT_ROUNDS = 12;
+
+type Asset = {
+  productIdentifier: string;
+  balance: number;
+};
 
 @pre<User>("save", function (next: any) {
   if (this.isModified("password")) {
@@ -22,6 +28,7 @@ const SALT_ROUNDS = 12;
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   },
+  options: { allowMixed: Severity.ALLOW },
 })
 export class User extends TimeStamps {
   @prop({ required: true })
@@ -45,6 +52,9 @@ export class User extends TimeStamps {
 
   @prop({ required: true })
   public cashBalance!: number;
+
+  @prop({ required: true })
+  public assets!: Asset[];
 
   public getFullName() {
     return `${this.firstName} ${this.lastName}`;
