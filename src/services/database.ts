@@ -9,8 +9,10 @@ export default async function () {
   });
 
   // await User.create({
-  //   email: "conor@labrys.io",
-  //   password: "password2021",
+  //   email: "matilda@labrys.io",
+  //   password: "password",
   //   balance: 250000,
+  //   firstName: "Matilda",
+  //   lastName: "Khuu",
   // });
 }

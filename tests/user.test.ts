@@ -1,6 +1,16 @@
 const request = require("supertest");
 import app from "../src/app";
 
+import { setupUsers, tearDownUsers } from "./setup";
+
+beforeAll(async () => {
+  await setupUsers();
+});
+
+afterAll(async () => {
+  await tearDownUsers();
+});
+
 test("Test login with wrong method", async () => {
   const response = await request(app.callback()).get("/user/login");
   expect(response.status).toBe(405);
@@ -21,7 +31,7 @@ test("Test login with garbage body", async () => {
 test("Test login with correct login details", async () => {
   const response = await request(app.callback()).post("/user/login").send({
     email: "conor@labrys.io",
-    password: "password2021",
+    password: "password",
   });
   expect(response.body).toHaveProperty("token");
   expect(response.body).toHaveProperty("refreshToken");
@@ -38,7 +48,7 @@ test("Test login with incorrect login details", async () => {
 test("Test accessing private route with token", async () => {
   let response = await request(app.callback()).post("/user/login").send({
     email: "conor@labrys.io",
-    password: "password2021",
+    password: "password",
   });
 
   const { token } = response.body;
@@ -68,7 +78,7 @@ test("Test accessing private route with invalid token", async () => {
 test("Test get user details of current user", async () => {
   let response = await request(app.callback()).post("/user/login").send({
     email: "conor@labrys.io",
-    password: "password2021",
+    password: "password",
   });
 
   const { token } = response.body;
@@ -80,8 +90,7 @@ test("Test get user details of current user", async () => {
     });
 
   expect(response.body).toHaveProperty("fullName");
-  expect(response.body).toHaveProperty("balance");
+  expect(response.body).toHaveProperty("cashBalance");
   expect(response.body).toHaveProperty("email");
   expect(response.status).toBe(200);
 });
-
