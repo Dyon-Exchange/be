@@ -40,7 +40,7 @@ router.route({
 
     let asset: AssetType | undefined;
     let token: TokenType | undefined;
-    let txHash: string = "";
+    let txHash = "";
 
     try {
       if (process.env.NODE_ENV !== "test") {

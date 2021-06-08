@@ -11,11 +11,6 @@ import { hashSync } from "bcrypt";
 
 const SALT_ROUNDS = 12;
 
-type Asset = {
-  productIdentifier: string;
-  balance: number;
-};
-
 @pre<User>("save", function (next: any) {
   if (this.isModified("password")) {
     this.password = hashSync(this.password, SALT_ROUNDS);
@@ -54,7 +49,10 @@ export class User extends TimeStamps {
   public cashBalance!: number;
 
   @prop({ required: true })
-  public assets!: Asset[];
+  public assets!: {
+    assetId: string;
+    quantity: number;
+  }[];
 
   public getFullName() {
     return `${this.firstName} ${this.lastName}`;
