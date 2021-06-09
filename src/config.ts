@@ -17,12 +17,12 @@ if (process.env.NODE_ENV === "test") {
   mongoConnectionUrl = process.env.MONGO_URL as string;
 }
 
-if (!process.env.GOERLI_URL) {
-  throw new Error("GOERLI_URL missing");
+if (!process.env.ETH_NODE_URL) {
+  throw new Error("ETH_NODE_URL missing");
 }
 
-if (!process.env.GOERLI_PRIVATE_KEY) {
-  throw new Error("GOERLI_PRIVATE_KEY missing");
+if (!process.env.PRIVATE_KEY) {
+  throw new Error("PRIVATE_KEY missing");
 }
 
 if (!process.env.GCLOUD_PROJECT_ID) {
@@ -33,8 +33,14 @@ if (!process.env.STORAGE_BUCKET) {
   throw new Error("STORAGE_BUCKET missing");
 }
 
-const goerliPrivateKey = process.env.GOERLI_PRIVATE_KEY;
-const goerliUrl = process.env.GOERLI_URL;
+if (!process.env.ORDERBOOK_URL) {
+  throw new Error("ORDERBOOK_URL missing");
+}
+
+const orderbookUrl = process.env.ORDERBOOK_URL;
+
+const privateKey = process.env.PRIVATE_KEY;
+const ethNodeUrl = process.env.ETH_NODE_URL;
 
 const gcloudProjectId = process.env.GCLOUD_PROJECT_ID;
 const storageBucket = process.env.STORAGE_BUCKET;
@@ -43,8 +49,9 @@ export default {
   mongoConnectionUrl,
   tokenSecret: "secret",
   refreshSecret: "very-secret",
-  goerliPrivateKey,
-  goerliUrl,
+  privateKey,
+  ethNodeUrl,
   storageBucket,
   gcloudProjectId,
+  orderbookUrl,
 };

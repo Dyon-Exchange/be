@@ -7,9 +7,9 @@ import app from "../src/app";
 let usersAlreadySetup = false;
 
 export async function setupUsers() {
-  if(usersAlreadySetup){
+  if (usersAlreadySetup) {
     return;
-  }else{
+  } else {
     usersAlreadySetup = true;
   }
 
@@ -65,16 +65,19 @@ export async function setupAssets() {
     year: "2021",
     name: "Example Spirit 1",
     productIdentifier: "012481629210681750",
+    unitSize: "(6x75cl)",
   });
   const asset2 = await Asset.create({
     year: "2022",
     name: "Example Spirit 2",
     productIdentifier: "012481621010681750",
+    unitSize: "(6x75cl)",
   });
   const asset3 = await Asset.create({
     year: "2023",
     name: "Example Spirit 3",
     productIdentifier: "112481620010681759",
+    unitSize: "(6x75cl)",
   });
 
   const user = await User.findOne({ email: "conor@labrys.io" });

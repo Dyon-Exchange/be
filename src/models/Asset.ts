@@ -30,6 +30,14 @@ export class Asset extends TimeStamps {
     await uploadFile(formData, bucketPath);
     this.image = `https://storage.googleapis.com/${config.storageBucket}/product-images/${this.productIdentifier}.png`;
   }
+
+  @prop({ required: true })
+  unitSize!: string;
+
+  @prop()
+  details?: {
+    blurb: string;
+  };
 }
 
 export default getModelForClass(Asset);

@@ -57,6 +57,8 @@ router.route({
         productIdentifier: productCode,
         year,
         name,
+        details: { blurb: "test blurb" },
+        unitSize: "(6x75cl)",
       });
 
       token = await Token.create({
