@@ -31,7 +31,7 @@ app.use(async (ctx: Context, next: CallBackFunction) => {
     ctx.body = {
       message: err.message,
     };
-    if(process.env.NODE_ENV !== "test"){
+    if (process.env.NODE_ENV !== "test") {
       console.error(err.message);
     }
     throw err;
@@ -39,6 +39,5 @@ app.use(async (ctx: Context, next: CallBackFunction) => {
 });
 
 app.use(index.routes()).use(index.allowedMethods());
-
 
 export default app;

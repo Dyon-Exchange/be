@@ -23,28 +23,49 @@ router.route({
 
 router.route({
   method: "GET",
+  path: "/data/:productIdentifier",
+  handler: async (ctx: Context) => {
+    const { productIdentifier } = ctx.params;
+    const asset = await Asset.findOne({ productIdentifier });
+    if (!asset) {
+      ctx.throw(404, "Asset with that product identifier does not exist");
+    }
+
+    ctx.body = {
+      asset,
+    };
+  },
+});
+
+router.route({
+  method: "GET",
   path: "/user",
   handler: async (ctx: Context) => {
     const user = ctx.state.user;
     const userAssets = user.assets;
-    const assets = await Asset.find({'_id': { $in: userAssets.map((a: any) => a.assetId)}});
-
-    userAssets.map((userAsset: any) => {
-      const filtered  = assets.filter(asset => asset._id.toString() == userAsset.assetId);
-      userAsset.asset = filtered[0];
-
+    const assets = await Asset.find({
+      _id: { $in: userAssets.map((a: any) => a.assetId) },
     });
 
-    let portfolioBalance = userAssets.reduce((acc:any, curr:any)=>{
+    userAssets.map((userAsset: any) => {
+      const filtered = assets.filter(
+        (asset) => asset._id.toString() == userAsset.assetId
+      );
+      userAsset.asset = filtered[0];
+    });
+
+    let portfolioBalance = userAssets.reduce((acc: any, curr: any) => {
       acc += curr.quantity * curr.asset.marketPrice;
       return acc;
     }, 0);
     portfolioBalance += user.cashBalance;
 
-    userAssets.map((userAsset: any)=> {
-      userAsset.portfolioShare = (userAsset.asset.marketPrice * userAsset.quantity / portfolioBalance) * 100;
+    userAssets.map((userAsset: any) => {
+      userAsset.portfolioShare =
+        ((userAsset.asset.marketPrice * userAsset.quantity) /
+          portfolioBalance) *
+        100;
     });
-
 
     ctx.body = {
       assets: userAssets,
@@ -84,19 +105,19 @@ router.route({
     },
     type: "json",
   },
-  handler: async (ctx: Context)=> {
+  handler: async (ctx: Context) => {
     const user = ctx.state.user;
-    const {productIdentifier, quantity} = ctx.request.body;
+    const { productIdentifier, quantity } = ctx.request.body;
 
-    const asset = await Asset.findOne({productIdentifier});
-    if(!asset){
+    const asset = await Asset.findOne({ productIdentifier });
+    if (!asset) {
       ctx.throw(404, "No asset with that productIdentifier exists");
     }
 
-    user.assets.push({assetId: asset._id, quantity});
+    user.assets.push({ assetId: asset._id, quantity });
     await user.save();
     ctx.response.status = 200;
-  }
-})
+  },
+});
 
 export default router;

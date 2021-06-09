@@ -44,17 +44,20 @@ test("GET user assets", async () => {
   expect(userAssets[1].asset.name).toBe("Example Spirit 2");
 });
 
-test("PUT user asset", async ()=> {
+test("PUT user asset", async () => {
   const token = await getLoginToken();
-  const response = await request(app.callback()).put("/asset/user").set({Authorization: `Bearer ${token}`}).send({
-    productIdentifier: "012481629210681750",
-    quantity: 10,
-  });
+  const response = await request(app.callback())
+    .put("/asset/user")
+    .set({ Authorization: `Bearer ${token}` })
+    .send({
+      productIdentifier: "012481629210681750",
+      quantity: 10,
+    });
 
   expect(response.status).toBe(200);
 
-  const user = await User.findOne({email: "conor@labrys.io"});
-  if(!user){
+  const user = await User.findOne({ email: "conor@labrys.io" });
+  if (!user) {
     throw new Error();
   }
   expect(user.assets.length).toBe(3);
