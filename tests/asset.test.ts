@@ -18,7 +18,7 @@ afterAll(async () => {
 });
 
 test("GET", async () => {
-  const token = await getLoginToken();
+  const [token] = await getLoginToken();
   const response = await request(app.callback())
     .get("/asset/")
     .set({
@@ -32,7 +32,7 @@ test("GET", async () => {
 });
 
 test("GET user assets", async () => {
-  const token = await getLoginToken();
+  const [token] = await getLoginToken();
   const response = await request(app.callback())
     .get("/asset/user")
     .set({
@@ -45,7 +45,7 @@ test("GET user assets", async () => {
 });
 
 test("PUT user asset", async () => {
-  const token = await getLoginToken();
+  const [token] = await getLoginToken();
   const response = await request(app.callback())
     .put("/asset/user")
     .set({ Authorization: `Bearer ${token}` })
