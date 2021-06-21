@@ -68,7 +68,7 @@ router.route({
     });
     await order.save();
 
-    await orderbook.addLimitOrder(order);
+    await orderbook.addLimitOrder(order, user);
 
     ctx.response.status = 200;
   },

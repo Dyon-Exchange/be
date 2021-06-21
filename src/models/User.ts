@@ -10,6 +10,7 @@ import isEmail from "validator/lib/isEmail";
 import { hashSync } from "bcrypt";
 import { MarketOrder } from "./MarketOrder";
 import { LimitOrder } from "./LimitOrder";
+import { OrderSide } from "./Order";
 
 const SALT_ROUNDS = 12;
 
@@ -118,6 +119,21 @@ export class User extends TimeStamps {
           }
         );
       }
+    } else {
+      throw new Error("Invalid order side");
+    }
+    // @ts-ignore
+    await this.save();
+  }
+
+  public async updateCashBalanceFromOrder(
+    amount: number,
+    orderSide: "buy" | "sell"
+  ): Promise<void> {
+    if (orderSide === "sell") {
+      this.cashBalance += amount;
+    } else if (orderSide === "buy") {
+      this.cashBalance -= amount;
     } else {
       throw new Error("Invalid order side");
     }

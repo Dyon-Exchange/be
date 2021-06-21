@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test-coverage": "jest --coverage",
-    "test": "jest",
+    "test": "jest --runInBand --detectOpenHandles",
     "build": "tsc",
     "clean": "rm -rf ./dist/",
     "compile": "tsc && DEBUG=* node ./dist/bin/www.js",

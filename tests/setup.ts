@@ -121,6 +121,55 @@ export async function setupAssets() {
     unitSize: "absolute unit",
   });
 
+  const asset8 = await Asset.create({
+    year: "2020",
+    name: "Example 7",
+    productIdentifier: "282882730981236773",
+    unitSize: "abolute unit",
+  });
+
+  const asset9 = await Asset.create({
+    year: "2020",
+    name: "Example 7",
+    productIdentifier: "182882730280236773",
+    unitSize: "abolute unit",
+  });
+
+  const asset10 = await Asset.create({
+    year: "2020",
+    name: "Example 7",
+    productIdentifier: "082882730981236773",
+    unitSize: "abolute unit",
+  });
+
+  const asset11 = await Asset.create({
+    year: "2020",
+    name: "Example 7",
+    productIdentifier: "923882730981236773",
+    unitSize: "abolute unit",
+  });
+
+  const asset12 = await Asset.create({
+    year: "2020",
+    name: "Example 10 ",
+    productIdentifier: "283920182738498448",
+    unitSize: "absolute unit",
+  });
+
+  const asset13 = await Asset.create({
+    year: "2021",
+    name: "Example 12",
+    productIdentifier: "2938392910292783838",
+    unitSize: "absolute unit",
+  });
+
+  const asset14 = await Asset.create({
+    year: "2021",
+    name: "Example 12",
+    productIdentifier: "293839291111111183",
+    unitSize: "absolute unit",
+  });
+
   const user = await User.findOne({ email: "conor@labrys.io" });
   if (!user) {
     throw new Error();
@@ -133,6 +182,13 @@ export async function setupAssets() {
     { productIdentifier: asset5.productIdentifier, quantity: 50 },
     { productIdentifier: asset6.productIdentifier, quantity: 20 },
     { productIdentifier: asset7.productIdentifier, quantity: 50 },
+    { productIdentifier: asset8.productIdentifier, quantity: 50 },
+    { productIdentifier: asset9.productIdentifier, quantity: 50 },
+    { productIdentifier: asset10.productIdentifier, quantity: 50 },
+    { productIdentifier: asset11.productIdentifier, quantity: 50 },
+    { productIdentifier: asset12.productIdentifier, quantity: 50 },
+    { productIdentifier: asset13.productIdentifier, quantity: 50 },
+    { productIdentifier: asset14.productIdentifier, quantity: 50 },
   ];
   await user.save();
 

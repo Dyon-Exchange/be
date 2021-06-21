@@ -8,7 +8,7 @@ import {
   tearDownOrders,
   tearDownUsers,
 } from "./setup";
-import Order from "../src/models/LimitOrder";
+import Order, { LimitOrder } from "../src/models/LimitOrder";
 import User from "../src/models/User";
 
 beforeAll(async () => {
@@ -16,11 +16,11 @@ beforeAll(async () => {
   await setupAssets();
 });
 
-afterAll(async () => {
-  //await tearDownOrders();
-  //await tearDownAssets();
-  //await tearDownUsers();
-});
+// afterEach(async () => {
+//   await tearDownOrders();
+//   await tearDownAssets();
+//   await tearDownUsers();
+// });
 
 async function getUsers() {
   const [user] = await User.find({ email: "conor@labrys.io" });
@@ -33,9 +33,10 @@ async function sendLimitOrder(
   side: string,
   quantity: number,
   price: number,
-  token: string
+  token: string,
+  allowErr: boolean = false
 ) {
-  return await request(app.callback())
+  const res = await request(app.callback())
     .put("/order/limitOrder")
     .set({
       Authorization: `Bearer ${token}`,
@@ -46,6 +47,10 @@ async function sendLimitOrder(
       quantity,
       price,
     });
+  if (res.status !== 200 && !allowErr) {
+    throw new Error(res.text);
+  }
+  return res;
 }
 
 async function giveUserAsset(
@@ -150,7 +155,8 @@ test("Test ASK Limit Order, user doesn't own amount trying to sell", async () =>
     "ASK",
     10,
     10,
-    token
+    token,
+    true
   );
   expect(response.status).toBe(400);
   expect(response.text).toBe(
@@ -169,7 +175,14 @@ test("Test BID with no cash balance", async () => {
     { $set: { cashBalance: 10 } }
   );
 
-  const res = await sendLimitOrder(productIdentifier, "BID", 10, 10, token);
+  const res = await sendLimitOrder(
+    productIdentifier,
+    "BID",
+    10,
+    10,
+    token,
+    true
+  );
   expect(res.status).toBe(400);
   expect(res.text).toBe(
     "User does not have enough cash to make this order 100 > 10"
@@ -343,4 +356,100 @@ test("Test calculate market price", async () => {
     })
     .set({ Authorization: `Bearer ${token}` });
   expect(Number(response.body.price)).toBe(20);
+});
+
+test("User cash balances update", async () => {
+  const [token, token2] = await getLoginToken();
+
+  let [user, user2] = await getUsers();
+  const initUser = user.cashBalance;
+  const initUser2 = user2.cashBalance;
+  const productIdentifier = "182882730280236773";
+
+  await sendLimitOrder(productIdentifier, "ASK", 10, 10, token);
+  await sendLimitOrder(productIdentifier, "BID", 10, 10, token2);
+
+  [user, user2] = await getUsers();
+  expect(user.cashBalance).toBe(initUser + 100);
+  expect(user2.cashBalance).toBe(initUser2 - 100);
+});
+
+test("User cash balances update higher bid higher than ask", async () => {
+  const [token, token2] = await getLoginToken();
+  let [user, user2] = await getUsers();
+  const initUser = user.cashBalance;
+  const initUser2 = user2.cashBalance;
+  const productIdentifier = "082882730981236773";
+  await sendLimitOrder(productIdentifier, "ASK", 1, 15, token);
+  await sendLimitOrder(productIdentifier, "BID", 1, 20, token2);
+
+  [user, user2] = await getUsers();
+  expect(user.cashBalance).toBe(initUser + 15);
+  expect(user2.cashBalance).toBe(initUser2 - 15);
+});
+
+test("User cash balances update higher ask than bid", async () => {
+  const [token, token2] = await getLoginToken();
+  let [user, user2] = await getUsers();
+  const initUser = user.cashBalance;
+  const initUser2 = user2.cashBalance;
+  const productIdentifier = "923882730981236773";
+
+  await sendLimitOrder(productIdentifier, "BID", 1, 15, token2);
+  await sendLimitOrder(productIdentifier, "ASK", 1, 10, token);
+
+  [user, user2] = await getUsers();
+  expect(user.cashBalance).toBe(initUser + 15);
+  expect(user2.cashBalance).toBe(initUser2 - 15);
+});
+
+test("User cash balances update, user's order only partially filled", async () => {
+  const [token, token2] = await getLoginToken();
+  let [user, user2] = await getUsers();
+  const initUser = user.cashBalance;
+  const initUser2 = user2.cashBalance;
+
+  const productIdentifier = "283920182738498448";
+
+  await sendLimitOrder(productIdentifier, "ASK", 4, 10, token);
+  await sendLimitOrder(productIdentifier, "BID", 1, 15, token2);
+
+  let bidOrder = await Order.findOne({
+    productIdentifier,
+    side: "ASK",
+    userId: user._id,
+    quantity: 4,
+    price: 10,
+  });
+  if (!bidOrder) {
+    throw new Error();
+  }
+
+  [user, user2] = await getUsers();
+  expect(user.cashBalance).toBe(initUser + 10);
+  expect(user2.cashBalance).toBe(initUser2 - 10);
+  expect(bidOrder.filled).toBe(1);
+
+  await sendLimitOrder(productIdentifier, "BID", 2, 15, token2);
+  bidOrder = await Order.findById(bidOrder._id);
+  if (!bidOrder) {
+    throw new Error();
+  }
+  expect(bidOrder.filled).toBe(3);
+});
+
+test("User cash balances update, order only partially fills other order", async () => {
+  const [token, token2] = await getLoginToken();
+  let [user, user2] = await getUsers();
+  const initUser = user.cashBalance;
+  const initUser2 = user2.cashBalance;
+
+  const productIdentifier = "293839291111111183";
+
+  await sendLimitOrder(productIdentifier, "ASK", 1, 10, token);
+  await sendLimitOrder(productIdentifier, "BID", 2, 10, token2);
+
+  [user, user2] = await getUsers();
+  expect(user.cashBalance).toBe(initUser + 10);
+  expect(user2.cashBalance).toBe(initUser2 - 10);
 });
