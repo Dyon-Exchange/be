@@ -44,12 +44,14 @@ router.route({
     const user = ctx.state.user;
     const userAssets = user.assets;
     const assets = await Asset.find({
-      _id: { $in: userAssets.map((a: any) => a.assetId) },
+      productIdentifier: {
+        $in: userAssets.map((a: any) => a.productIdentifier),
+      },
     });
 
     userAssets.map((userAsset: any) => {
       const filtered = assets.filter(
-        (asset) => asset._id.toString() == userAsset.assetId
+        (asset) => asset.productIdentifier == userAsset.productIdentifier
       );
       userAsset.asset = filtered[0];
     });
@@ -114,7 +116,18 @@ router.route({
       ctx.throw(404, "No asset with that productIdentifier exists");
     }
 
-    user.assets.push({ assetId: asset._id, quantity });
+    await user.update(
+      {
+        $set: {
+          "assets.$[el].quantity": quantity,
+        },
+      },
+      {
+        arrayFilters: [{ "el.productIdentifier": productIdentifier }],
+        new: true,
+      }
+    );
+
     await user.save();
     ctx.response.status = 200;
   },
