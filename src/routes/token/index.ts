@@ -44,7 +44,6 @@ router.route({
 
     try {
       if (process.env.NODE_ENV !== "test") {
-        console.log(process.env);
         const response = await Contract.mint(
           BigNumber.from(`${productCode}${caseId}${locationId}${taxCode}`),
           supply
