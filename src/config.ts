@@ -37,7 +37,12 @@ if (!process.env.ORDERBOOK_URL) {
   throw new Error("ORDERBOOK_URL missing");
 }
 
-const orderbookUrl = process.env.ORDERBOOK_URL;
+let orderbookUrl;
+if (process.env.NODE_ENV !== "test") {
+  orderbookUrl = process.env.ORDERBOOK_URL;
+} else {
+  orderbookUrl = "http://localhost:5341";
+}
 
 const privateKey = process.env.PRIVATE_KEY;
 const ethNodeUrl = process.env.ETH_NODE_URL;

@@ -199,7 +199,7 @@ test("Test BID with no cash balance", async () => {
 
 test("Test Limit Order partially filled", async () => {
   const [token, token2] = await getLoginToken();
-  const productIdentifier = "271829302982738492";
+  const productIdentifier = "293839291111111181";
   await sendLimitOrder(productIdentifier, "ASK", 10, 10, token);
 
   await sendLimitOrder(productIdentifier, "BID", 5, 10, token2);

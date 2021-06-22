@@ -170,6 +170,13 @@ export async function setupAssets() {
     unitSize: "absolute unit",
   });
 
+  const asset15 = await Asset.create({
+    year: "2021",
+    name: "Example 12",
+    productIdentifier: "293839291111111181",
+    unitSize: "absolute unit",
+  });
+
   const user = await User.findOne({ email: "conor@labrys.io" });
   if (!user) {
     throw new Error();
@@ -189,6 +196,7 @@ export async function setupAssets() {
     { productIdentifier: asset12.productIdentifier, quantity: 50 },
     { productIdentifier: asset13.productIdentifier, quantity: 50 },
     { productIdentifier: asset14.productIdentifier, quantity: 50 },
+    { productIdentifier: asset15.productIdentifier, quantity: 50 },
   ];
   await user.save();
 

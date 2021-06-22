@@ -60,5 +60,5 @@ test("PUT user asset", async () => {
   if (!user) {
     throw new Error();
   }
-  expect(user.assets.length).toBe(13);
+  expect(user.assets.length).toBe(14);
 });
