@@ -126,7 +126,12 @@ router.route({
         quantity,
         side
       );
-      ctx.response.body = { price };
+
+      if (price) {
+        ctx.response.body = { price: Number(price) };
+      } else {
+        ctx.response.status = 404;
+      }
     } catch (e) {
       console.log("error", e);
       ctx.throw(400, e);

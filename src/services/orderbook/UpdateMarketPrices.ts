@@ -3,17 +3,28 @@ import CalculateMarketPrice from "./CalculateMarketPrice";
 
 export default async function UpdateMarketPrices(): Promise<void> {
   const assets = await Asset.find();
-  console.log("running");
   await Promise.all(
     assets.map(async (asset) => {
-      const marketPrice = await CalculateMarketPrice(
+      const askMarketPrice = await CalculateMarketPrice(
         asset.productIdentifier,
         1,
         "ASK"
       );
-      console.log({ marketPrice });
 
-      asset.marketPrice = marketPrice;
+      if (askMarketPrice) {
+        asset.askMarketPrice = +Number(askMarketPrice).toFixed(2);
+      }
+
+      const bidMarketPrice = await CalculateMarketPrice(
+        asset.productIdentifier,
+        1,
+        "BID"
+      );
+
+      if (bidMarketPrice) {
+        asset.bidMarketPrice = +Number(bidMarketPrice).toFixed(2);
+      }
+
       await asset.save();
     })
   );

@@ -23,7 +23,10 @@ export class Asset extends TimeStamps {
   image?: string;
 
   @prop()
-  marketPrice?: number;
+  askMarketPrice?: number;
+
+  @prop()
+  bidMarketPrice?: number;
 
   public async uploadImage(formData: any): Promise<void> {
     const bucketPath = `product-images/${this.productIdentifier}.png`;

@@ -1,7 +1,7 @@
 import { OrderSide } from "../../models/Order";
 import { httpClient } from "./common";
 
-export default async function CalculateMarketPrice(
+async function CalculateMarketPrice(
   productIdentifier: string,
   quantity: number,
   side: OrderSide
@@ -12,10 +12,10 @@ export default async function CalculateMarketPrice(
       quantity,
       side,
     });
-    console.log(response.data);
     return response.data.Price;
   } catch (e) {
-    console.log(e.response.text);
     return undefined;
   }
 }
+
+export default CalculateMarketPrice;

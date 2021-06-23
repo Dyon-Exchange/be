@@ -1,6 +1,8 @@
 import Koa, { Context } from "koa";
 import bodyParser from "koa-bodyparser";
 import cors from "@koa/cors";
+import Orderbook from "./services/orderbook";
+import cron from "node-cron";
 import index from "./routes";
 import database from "./services/database";
 import passport from "koa-passport";
@@ -40,4 +42,9 @@ app.use(async (ctx: Context, next: CallBackFunction) => {
 
 app.use(index.routes()).use(index.allowedMethods());
 
+cron
+  .schedule("15 * * * * *", async () => {
+    await Orderbook.UpdateMarketPrices();
+  })
+  .start();
 export default app;
