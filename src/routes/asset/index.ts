@@ -77,7 +77,6 @@ router.route({
       assets: userAssets,
       portfolioBalance,
     };
-    console.log(ctx.body);
   },
 });
 

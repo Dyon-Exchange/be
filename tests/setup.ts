@@ -3,6 +3,7 @@ import Token from "../src/models/Token";
 import User from "../src/models/User";
 import LimitOrder from "../src/models/LimitOrder";
 import MarketOrder from "../src/models/MarketOrder";
+import orderbook from "../src/services/orderbook";
 const request = require("supertest");
 import app from "../src/app";
 
@@ -16,10 +17,12 @@ export async function setupUsers() {
     usersAlreadySetup = true;
   }
 
+  const password = "password";
+
   try {
     await User.create({
       email: "conor@labrys.io",
-      password: "password",
+      password,
       cashBalance: 2500000000,
       firstName: "Conor",
       lastName: "Brosnan",
@@ -28,10 +31,36 @@ export async function setupUsers() {
 
     await User.create({
       email: "matilda@labrys.io",
-      password: "password",
+      password,
       cashBalance: 250000,
       firstName: "Matilda",
       lastName: "Khuu",
+      assets: [],
+    });
+    await User.create({
+      email: "jeremy@dyon.com",
+      password,
+      cashBalance: 2500,
+      firstName: "Jeremy",
+      lastName: "Howard",
+      assets: [],
+    });
+
+    await User.create({
+      email: "alice@dyon.com",
+      password,
+      cashBalance: 2500,
+      firstName: "Alice",
+      lastName: "Smith",
+      assets: [],
+    });
+
+    await User.create({
+      email: "bob@dyon.com",
+      password,
+      cashBalance: 2500,
+      firstName: "Bob",
+      lastName: "Smith",
       assets: [],
     });
   } catch (e) {
@@ -173,8 +202,43 @@ export async function setupAssets() {
   const asset15 = await Asset.create({
     year: "2021",
     name: "Example 12",
-    productIdentifier: "293839291111111181",
+    productIdentifier: "823439291111111181",
     unitSize: "absolute unit",
+  });
+
+  const asset16 = await Asset.create({
+    year: "2021",
+    name: "Example 12",
+    productIdentifier: "193839282222211181",
+    unitSize: "absolute unit",
+  });
+
+  const asset17 = await Asset.create({
+    year: "2021",
+    name: "Example 12",
+    productIdentifier: "198939282222282222",
+    unitSize: "absolute unit",
+  });
+
+  const asset18 = await Asset.create({
+    year: "2021",
+    name: "Example 12",
+    productIdentifier: "201111112222222222",
+    unitSize: "absolute unit",
+  });
+
+  const asset19 = await Asset.create({
+    year: "2021",
+    name: "Example 12",
+    productIdentifier: "098765432111111111",
+    unitSize: "absolute unit",
+  });
+
+  const asset20 = await Asset.create({
+    year: "2020",
+    name: "Example 13",
+    productIdentifier: "796127361273612736",
+    unitSize: "jashdf",
   });
 
   const user = await User.findOne({ email: "conor@labrys.io" });
@@ -197,6 +261,11 @@ export async function setupAssets() {
     { productIdentifier: asset13.productIdentifier, quantity: 50 },
     { productIdentifier: asset14.productIdentifier, quantity: 50 },
     { productIdentifier: asset15.productIdentifier, quantity: 50 },
+    { productIdentifier: asset16.productIdentifier, quantity: 50 },
+    { productIdentifier: asset17.productIdentifier, quantity: 50 },
+    { productIdentifier: asset18.productIdentifier, quantity: 50 },
+    { productIdentifier: asset19.productIdentifier, quantity: 50 },
+    { productIdentifier: asset20.productIdentifier, quantity: 50 },
   ];
   await user.save();
 

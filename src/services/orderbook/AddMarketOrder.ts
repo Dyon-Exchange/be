@@ -11,6 +11,7 @@ import {
   processDoneOrder,
   processPartialOrder,
 } from "./common";
+import CalculateMarketPrice from "./CalculateMarketPrice";
 
 async function processMarketOrder(
   o: DocumentType<MarketOrderClass>,
@@ -31,8 +32,11 @@ export default async function AddMarketOrder(
   side: OrderSide,
   quantity: number,
   user: DocumentType<UserClass>
-): Promise<void> {
-  const order = await MarketOrder.create({
+): Promise<DocumentType<MarketOrderClass>> {
+  const price = await CalculateMarketPrice(productIdentifier, quantity, side);
+  console.log({ price: Number(price) });
+
+  const newOrder = await MarketOrder.create({
     userId: user._id,
     productIdentifier,
     side,
@@ -41,31 +45,49 @@ export default async function AddMarketOrder(
     status: "PENDING",
     filled: 0,
     matched: [],
+    price: Number(price),
   });
-  await order.save();
+
+  await newOrder.save();
+
+  console.log({ newOrder });
 
   const response = await httpClient.post("/addMarketOrder", {
-    OrderID: order.orderId,
-    Side: order.side,
-    Quantity: order.quantity,
-    Asset: order.productIdentifier,
+    OrderID: newOrder.orderId,
+    Side: newOrder.side,
+    Quantity: newOrder.quantity,
+    Asset: newOrder.productIdentifier,
   });
   const data: AddMarketOrderResponse = response.data;
 
-  //let priceTotal = 0; // how much the user that initiated the order has spent.
+  let priceTotal = 0; // how much the user that initiated the order has spent.
 
   if (data.Done) {
     for await (const o of data.Done) {
-      //priceTotal += o.price * o.quantity;
+      priceTotal += o.price * o.quantity;
       await processDoneOrder(o, true);
     }
   }
 
   if (data.Partial) {
     const partialQuantity = Number(data.PartialQuantityProcessed);
-    //priceTotal += data.Partial.price * partialQuantity;
+    priceTotal += data.Partial.price * partialQuantity;
     await processPartialOrder(data.Partial, partialQuantity, true);
   }
 
-  //const filled = order.quantity - data.QuantityLeft;
+  if (data.QuantityLeft < newOrder.quantity) {
+    const filled = newOrder.quantity - data.QuantityLeft;
+    await user.updateAssetQuantityFromOrder(newOrder, filled);
+    user.updateCashBalanceFromOrder(
+      priceTotal,
+      newOrder.side === "ASK" ? "sell" : "buy"
+    );
+    newOrder.filled = filled;
+    newOrder.status = "COMPLETE";
+    await newOrder.save();
+  } else {
+    newOrder.status = "CANNOT-FILL";
+    await newOrder.save();
+  }
+  return newOrder;
 }
