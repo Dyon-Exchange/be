@@ -72,6 +72,69 @@ export class User extends TimeStamps {
     }
   }
 
+  public async addAsset(
+    productIdentifier: string,
+    quantity: number
+  ): Promise<void> {
+    const index = this.assets.findIndex(
+      (a: any) => a.productIdentifier === productIdentifier
+    );
+
+    if (index === -1) {
+      this.assets.push({
+        productIdentifier,
+        quantity,
+      });
+      // @ts-ignore
+      await this.save();
+    } else {
+      // @ts-ignore
+      await this.update(
+        {
+          $set: {
+            "assets.$[el].quantity": this.assets[index].quantity + quantity,
+          },
+        },
+        {
+          arrayFilters: [{ "el.productIdentifier": productIdentifier }],
+          new: true,
+        }
+      );
+    }
+  }
+
+  public async minusAsset(
+    productIdentifier: string,
+    quantity: number
+  ): Promise<void> {
+    const index = this.assets.findIndex(
+      (a: any) => a.productIdentifier === productIdentifier
+    );
+
+    if (index === -1) {
+      throw new Error(
+        `${this.email} does not have any of this asset $productIdentifier}.`
+      );
+    } else {
+      if (this.assets[index].quantity - quantity === 0) {
+        this.assets.splice(index, 1);
+      } else {
+        // @ts-ignore
+        await this.update(
+          {
+            $set: {
+              "assets.$[el].quantity": this.assets[index].quantity - quantity,
+            },
+          },
+          {
+            arrayFilters: [{ "el.productIdentifier": productIdentifier }],
+            new: true,
+          }
+        );
+      }
+    }
+  }
+
   public async updateAssetQuantityFromOrder(
     order: MarketOrder | LimitOrder,
     filled: number
@@ -81,44 +144,9 @@ export class User extends TimeStamps {
     );
 
     if (order.side === "ASK") {
-      if (index === -1) {
-        throw new Error(
-          `${this.email} does not have any of this asset ${order.productIdentifier}. Should not have been able to submit ASK order`
-        );
-      } else {
-        // @ts-ignore
-        await this.update(
-          {
-            $set: {
-              "assets.$[el].quantity": this.assets[index].quantity - filled,
-            },
-          },
-          {
-            arrayFilters: [{ "el.productIdentifier": order.productIdentifier }],
-            new: true,
-          }
-        );
-      }
+      await this.minusAsset(order.productIdentifier, filled);
     } else if (order.side === "BID") {
-      if (index === -1) {
-        this.assets.push({
-          productIdentifier: order.productIdentifier,
-          quantity: filled,
-        });
-      } else {
-        // @ts-ignore
-        await this.update(
-          {
-            $set: {
-              "assets.$[el].quantity": this.assets[index].quantity + filled,
-            },
-          },
-          {
-            arrayFilters: [{ "el.productIdentifier": order.productIdentifier }],
-            new: true,
-          }
-        );
-      }
+      await this.addAsset(order.productIdentifier, filled);
     } else {
       throw new Error("Invalid order side");
     }

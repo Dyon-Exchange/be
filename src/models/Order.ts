@@ -2,7 +2,7 @@ import { modelOptions, prop } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
 export type OrderSide = "BID" | "ASK";
-export type OrderStatus = "PENDING" | "COMPLETE" | "CANCELED";
+export type OrderStatus = "PENDING" | "COMPLETE" | "CANCELED" | "CANNOT-FILL";
 
 @modelOptions({
   schemaOptions: {

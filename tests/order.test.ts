@@ -9,6 +9,7 @@ import {
   tearDownUsers,
 } from "./setup";
 import Order, { LimitOrder } from "../src/models/LimitOrder";
+import MarketOrder from "../src/models/MarketOrder";
 import User from "../src/models/User";
 
 beforeAll(async () => {
@@ -26,6 +27,23 @@ async function getUsers() {
   const [user] = await User.find({ email: "conor@labrys.io" });
   const [user1] = await User.find({ email: "matilda@labrys.io" });
   return [user, user1];
+}
+
+async function getCalculateMarketPrice(
+  productIdentifier: string,
+  quantity: number,
+  side: string,
+  token: string
+): Promise<number> {
+  const res = await request(app.callback())
+    .post("/order/calculateMarketPrice")
+    .send({
+      productIdentifier,
+      quantity,
+      side,
+    })
+    .set({ Authorization: `Bearer ${token}` });
+  return res.body.price;
 }
 
 async function sendLimitOrder(
@@ -47,6 +65,30 @@ async function sendLimitOrder(
       quantity,
       price,
     });
+  if (res.status !== 200 && !allowErr) {
+    throw new Error(res.text);
+  }
+  return res;
+}
+
+async function sendMarketOrder(
+  productIdentifier: string,
+  side: string,
+  quantity: number,
+  token: string,
+  allowErr: boolean = false
+) {
+  const res = await request(app.callback())
+    .put("/order/marketOrder")
+    .set({
+      Authorization: `Bearer ${token}`,
+    })
+    .send({
+      productIdentifier,
+      side,
+      quantity,
+    });
+
   if (res.status !== 200 && !allowErr) {
     throw new Error(res.text);
   }
@@ -199,7 +241,7 @@ test("Test BID with no cash balance", async () => {
 
 test("Test Limit Order partially filled", async () => {
   const [token, token2] = await getLoginToken();
-  const productIdentifier = "271829302982738492";
+  const productIdentifier = "293839291111111183";
   await sendLimitOrder(productIdentifier, "ASK", 10, 10, token);
 
   await sendLimitOrder(productIdentifier, "BID", 5, 10, token2);
@@ -408,34 +450,39 @@ test("User cash balances update, user's order only partially filled", async () =
   let [user, user2] = await getUsers();
   const initUser = user.cashBalance;
   const initUser2 = user2.cashBalance;
-
-  const productIdentifier = "283920182738498448";
-
+  const productIdentifier = "201111112222222222";
   await sendLimitOrder(productIdentifier, "ASK", 4, 10, token);
   await sendLimitOrder(productIdentifier, "BID", 1, 15, token2);
 
-  let bidOrder = await Order.findOne({
+  let askOrder = await Order.findOne({
     productIdentifier,
     side: "ASK",
     userId: user._id,
     quantity: 4,
     price: 10,
   });
-  if (!bidOrder) {
+  let bidOrder = await Order.findOne({
+    productIdentifier,
+    side: "BID",
+    userId: user2._id,
+    quantity: 1,
+    price: 15,
+  });
+  if (!askOrder) {
     throw new Error();
   }
 
   [user, user2] = await getUsers();
   expect(user.cashBalance).toBe(initUser + 10);
   expect(user2.cashBalance).toBe(initUser2 - 10);
-  expect(bidOrder.filled).toBe(1);
+  expect(askOrder.filled).toBe(1);
 
   await sendLimitOrder(productIdentifier, "BID", 2, 15, token2);
-  bidOrder = await Order.findById(bidOrder._id);
-  if (!bidOrder) {
+  askOrder = await Order.findById(askOrder._id);
+  if (!askOrder) {
     throw new Error();
   }
-  expect(bidOrder.filled).toBe(3);
+  expect(askOrder.filled).toBe(3);
 });
 
 test("User cash balances update, order only partially fills other order", async () => {
@@ -444,7 +491,7 @@ test("User cash balances update, order only partially fills other order", async 
   const initUser = user.cashBalance;
   const initUser2 = user2.cashBalance;
 
-  const productIdentifier = "293839291111111183";
+  const productIdentifier = "098765432111111111";
 
   await sendLimitOrder(productIdentifier, "ASK", 1, 10, token);
   await sendLimitOrder(productIdentifier, "BID", 2, 10, token2);
@@ -452,4 +499,154 @@ test("User cash balances update, order only partially fills other order", async 
   [user, user2] = await getUsers();
   expect(user.cashBalance).toBe(initUser + 10);
   expect(user2.cashBalance).toBe(initUser2 - 10);
+});
+
+test("Calculate market price no orders", async () => {
+  const [token, token2] = await getLoginToken();
+  let [user, user2] = await getUsers();
+  const productIdentifier = "182882730280236773";
+
+  const response = await request(app.callback())
+    .post("/order/calculateMarketPrice")
+    .send({
+      productIdentifier,
+      quantity: 1,
+      side: "ASK",
+    })
+    .set({ Authorization: `Bearer ${token}` });
+  expect(response.status).toBe(404);
+});
+
+test("Calculate market price no bid orders", async () => {
+  const [token, token2] = await getLoginToken();
+  let [user, user2] = await getUsers();
+  const productIdentifier = "293839291111111183";
+
+  await sendLimitOrder(productIdentifier, "ASK", 1, 10, token);
+  await sendLimitOrder(productIdentifier, "ASK", 2, 10, token);
+
+  const response = await request(app.callback())
+    .post("/order/calculateMarketPrice")
+    .send({
+      productIdentifier,
+      quantity: 1,
+      side: "ASK",
+    })
+    .set({ Authorization: `Bearer ${token}` });
+  expect(response.status).toBe(404);
+});
+
+test("Calculate market price differnet quantities", async () => {
+  const [token, token2] = await getLoginToken();
+  let [user, user2] = await getUsers();
+
+  const productIdentifier = "193839282222211181";
+  await sendLimitOrder(productIdentifier, "BID", 1, 10, token);
+  await sendLimitOrder(productIdentifier, "BID", 2, 10, token);
+  await sendLimitOrder(productIdentifier, "BID", 3, 10, token);
+  await sendLimitOrder(productIdentifier, "BID", 4, 10, token);
+
+  let response = await request(app.callback())
+    .post("/order/calculateMarketPrice")
+    .send({
+      productIdentifier,
+      quantity: 1,
+      side: "ASK",
+    })
+    .set({ Authorization: `Bearer ${token}` });
+  expect(response.body.price).toBe(10);
+  response = await request(app.callback())
+    .post("/order/calculateMarketPrice")
+    .send({
+      productIdentifier,
+      quantity: 2,
+      side: "ASK",
+    })
+    .set({ Authorization: `Bearer ${token}` });
+  expect(response.body.price).toBe(20);
+  response = await request(app.callback())
+    .post("/order/calculateMarketPrice")
+    .send({
+      productIdentifier,
+      quantity: 3,
+      side: "ASK",
+    })
+    .set({ Authorization: `Bearer ${token}` });
+  expect(response.body.price).toBe(30);
+});
+
+test("Market price ask order. Order filled", async () => {
+  const [token, token2] = await getLoginToken();
+  const productIdentifier = "198939282222282222";
+  let [user, user2] = await getUsers();
+  const initUser = user.cashBalance;
+  const initUser2 = user2.cashBalance;
+  await sendLimitOrder(productIdentifier, "BID", 1, 10, token2);
+
+  const c = await getCalculateMarketPrice(productIdentifier, 1, "ASK", token);
+  expect(c).toBe(10);
+
+  await sendMarketOrder(productIdentifier, "ASK", 1, token);
+  const [order] = await MarketOrder.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+    quantity: 1,
+  });
+
+  expect(order.status).toBe("COMPLETE");
+  [user, user2] = await getUsers();
+  expect(user.cashBalance).toBe(initUser + 10);
+  expect(user2.cashBalance).toBe(initUser2 - 10);
+  expect(await checkUserAssetQuantity(productIdentifier, token)).toBe(49);
+  expect(await checkUserAssetQuantity(productIdentifier, token2)).toBe(1);
+});
+
+test("Market price bid order. Order filled", async () => {
+  const [token, token2] = await getLoginToken();
+  const productIdentifier = "198939282222282222";
+  let [user, user2] = await getUsers();
+  const initUser = user.cashBalance;
+  const initUser2 = user2.cashBalance;
+  await sendLimitOrder(productIdentifier, "ASK", 1, 10, token);
+
+  const c = await getCalculateMarketPrice(productIdentifier, 1, "BID", token2);
+  expect(c).toBe(10);
+
+  await sendMarketOrder(productIdentifier, "BID", 1, token2);
+  const [order] = await MarketOrder.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+    quantity: 1,
+  });
+
+  expect(order.status).toBe("COMPLETE");
+  [user, user2] = await getUsers();
+  expect(user.cashBalance).toBe(initUser + 10);
+  expect(user2.cashBalance).toBe(initUser2 - 10);
+});
+
+test("Market price ask order. No liquidity.", async () => {
+  const [token, token2] = await getLoginToken();
+
+  const productIdentifier = "796127361273612736";
+  let [user, user2] = await getUsers();
+  const initUser = user.cashBalance;
+  const initUser2 = user2.cashBalance;
+
+  const res = await sendMarketOrder(productIdentifier, "ASK", 1, token);
+  console.log(res.body);
+  expect(res.body.order.status).toBe("CANNOT-FILL");
+});
+
+test("Market price bid order. No liquidity.", async () => {
+  const [token, token2] = await getLoginToken();
+  const productIdentifier = "796127361273612736";
+  let [user, user2] = await getUsers();
+  const initUser = user.cashBalance;
+  const initUser2 = user2.cashBalance;
+
+  const res = await sendMarketOrder(productIdentifier, "BID", 1, token);
+  expect(res.body.order.status).toBe("CANNOT-FILL");
 });
