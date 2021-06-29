@@ -57,16 +57,20 @@ router.route({
     });
 
     let portfolioBalance = userAssets.reduce((acc: any, curr: any) => {
-      acc += curr.quantity * curr.asset.marketPrice;
+      if (curr.asset.askMarketPrice) {
+        acc += curr.quantity * curr.asset.askMarketPrice;
+      }
       return acc;
     }, 0);
     portfolioBalance += user.cashBalance;
 
     userAssets.map((userAsset: any) => {
-      userAsset.portfolioShare =
-        ((userAsset.asset.marketPrice * userAsset.quantity) /
-          portfolioBalance) *
-        100;
+      if (userAsset.asset.askMarketPrice) {
+        userAsset.portfolioShare =
+          ((userAsset.asset.askMarketPrice * userAsset.quantity) /
+            portfolioBalance) *
+          100;
+      }
     });
 
     ctx.body = {
@@ -127,7 +131,6 @@ router.route({
         new: true,
       }
     );
-
     await user.save();
     ctx.response.status = 200;
   },

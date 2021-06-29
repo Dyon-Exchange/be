@@ -1,7 +1,6 @@
 import { Context } from "koa";
 import Router from "koa-joi-router";
 import orderbook from "../../services/orderbook";
-import { v4 as uuidv4 } from "uuid";
 import LimitOrder from "../../models/LimitOrder";
 import MarketOrder from "../../models/MarketOrder";
 import { authRequired } from "../../services/passport";
@@ -42,33 +41,17 @@ router.route({
     const user = ctx.state.user;
     const { productIdentifier, side, quantity, price } = ctx.request.body;
 
-    if (!user.hasEnoughBalance(quantity, price) && side == "BID") {
-      ctx.throw(
-        400,
-        `User does not have enough cash to make this order ${
-          price * quantity
-        } > ${user.cashBalance}`
+    try {
+      await orderbook.AddLimitOrder(
+        productIdentifier,
+        side,
+        quantity,
+        price,
+        user
       );
+    } catch (e) {
+      ctx.throw(400, e);
     }
-
-    if (user.getAssetQuantity(productIdentifier) < quantity && side == "ASK") {
-      ctx.throw(400, "User does not have enough asset to sell that quantity");
-    }
-
-    const order = await LimitOrder.create({
-      userId: user._id,
-      price,
-      productIdentifier,
-      side,
-      quantity,
-      orderId: uuidv4(),
-      status: "PENDING",
-      filled: 0,
-      matched: [],
-    });
-    await order.save();
-
-    await orderbook.addLimitOrder(order, user);
 
     ctx.response.status = 200;
   },
@@ -88,22 +71,14 @@ router.route({
   handler: async (ctx: Context) => {
     const user = ctx.state.user;
     const { productIdentifier, side, quantity } = ctx.request.body;
-
-    const order = await MarketOrder.create({
-      userId: user._id,
+    const order = await orderbook.AddMarketOrder(
       productIdentifier,
       side,
       quantity,
-      orderId: uuidv4(),
-      status: "PENDING",
-      filled: 0,
-      matched: [],
-    });
-    await order.save();
-
-    await orderbook.addMarketOrder(order);
-
-    ctx.response.status = 200;
+      user
+    );
+    ctx.response.body = order;
+    ctx.response.status;
   },
 });
 
@@ -133,7 +108,7 @@ router.route({
       ctx.throw(400, "Cannot cancel completed order");
     }
 
-    await orderbook.cancelOrder(order);
+    await orderbook.CancelOrder(order);
     ctx.response.status = 200;
   },
 });
@@ -152,12 +127,17 @@ router.route({
   handler: async (ctx: Context) => {
     const { quantity, productIdentifier, side } = ctx.request.body;
     try {
-      const price = await orderbook.calculateMarketPrice(
+      const price = await orderbook.CalculateMarketPrice(
         productIdentifier,
         quantity,
         side
       );
-      ctx.response.body = { price };
+
+      if (price) {
+        ctx.response.body = { price: Number(price) };
+      } else {
+        ctx.response.status = 404;
+      }
     } catch (e) {
       console.log("error", e);
       ctx.throw(400, e);
