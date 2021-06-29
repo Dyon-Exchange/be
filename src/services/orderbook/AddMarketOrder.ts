@@ -54,6 +54,7 @@ export default async function AddMarketOrder(
 
   const response = await httpClient.post("/addMarketOrder", {
     OrderID: newOrder.orderId,
+    UserID: newOrder.userId,
     Side: newOrder.side,
     Quantity: newOrder.quantity,
     Asset: newOrder.productIdentifier,

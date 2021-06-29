@@ -66,6 +66,7 @@ export default async function AddLimitOrder(
   const response = await httpClient.post("/addLimitOrder", {
     OrderID: newOrder.orderId,
     Side: newOrder.side,
+    UserID: newOrder.userId,
     Quantity: newOrder.quantity,
     Asset: newOrder.productIdentifier,
     Price: newOrder.price,

@@ -116,18 +116,22 @@ export class User extends TimeStamps {
         `${this.email} does not have any of this asset $productIdentifier}.`
       );
     } else {
-      // @ts-ignore
-      await this.update(
-        {
-          $set: {
-            "assets.$[el].quantity": this.assets[index].quantity - quantity,
+      if (this.assets[index].quantity - quantity === 0) {
+        this.assets.splice(index, 1);
+      } else {
+        // @ts-ignore
+        await this.update(
+          {
+            $set: {
+              "assets.$[el].quantity": this.assets[index].quantity - quantity,
+            },
           },
-        },
-        {
-          arrayFilters: [{ "el.productIdentifier": productIdentifier }],
-          new: true,
-        }
-      );
+          {
+            arrayFilters: [{ "el.productIdentifier": productIdentifier }],
+            new: true,
+          }
+        );
+      }
     }
   }
 
