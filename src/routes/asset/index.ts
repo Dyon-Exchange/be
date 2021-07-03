@@ -2,7 +2,11 @@ import { Context } from "koa";
 import Router, { Joi } from "koa-joi-router";
 import multer from "@koa/multer";
 import Asset from "../../models/Asset";
+import AssetPriceEvent from "../../models/AssetPriceEvent";
 import { authRequired } from "../../services/passport";
+import { Dictionary } from "lodash";
+import PriceEvent from "../../models/AssetPriceEvent";
+import config from "../../config";
 
 const upload = multer();
 const router = Router();
@@ -27,12 +31,18 @@ router.route({
   handler: async (ctx: Context) => {
     const { productIdentifier } = ctx.params;
     const asset = await Asset.findOne({ productIdentifier });
+
+    const priceEvents = await AssetPriceEvent.find({
+      productIdentifier,
+    });
+
     if (!asset) {
       ctx.throw(404, "Asset with that product identifier does not exist");
     }
 
     ctx.body = {
       asset,
+      priceEvents,
     };
   },
 });
