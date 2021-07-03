@@ -50,6 +50,8 @@ const ethNodeUrl = process.env.ETH_NODE_URL;
 const gcloudProjectId = process.env.GCLOUD_PROJECT_ID;
 const storageBucket = process.env.STORAGE_BUCKET;
 
+const startDate = new Date(2021, 4, 1);
+
 export default {
   mongoConnectionUrl,
   tokenSecret: "secret",
@@ -59,4 +61,5 @@ export default {
   storageBucket,
   gcloudProjectId,
   orderbookUrl,
+  startDate,
 };

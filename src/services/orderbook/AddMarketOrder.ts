@@ -34,7 +34,6 @@ export default async function AddMarketOrder(
   user: DocumentType<UserClass>
 ): Promise<DocumentType<MarketOrderClass>> {
   const price = await CalculateMarketPrice(productIdentifier, quantity, side);
-  console.log({ price: Number(price) });
 
   const newOrder = await MarketOrder.create({
     userId: user._id,
@@ -49,8 +48,6 @@ export default async function AddMarketOrder(
   });
 
   await newOrder.save();
-
-  console.log({ newOrder });
 
   const response = await httpClient.post("/addMarketOrder", {
     OrderID: newOrder.orderId,
