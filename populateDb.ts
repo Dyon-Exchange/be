@@ -97,7 +97,93 @@ async function CreateAssetAndToken(a: CreateAsset) {
   });
 }
 
-async function AddAssets() {
+async function AddAssetProd() {
+  await CreateAssetAndToken({
+    productCode: "101231620010600750",
+    year: "2001",
+    caseId: "00000003",
+    locationId: "000",
+    taxCode: "030",
+    conditionCode: "010",
+    name: "Latour",
+    image: "",
+    blurb:
+      "Château Latour is one of Bordeaux's – and the world's – most famous wine producers. It is situated in the southeast corner of the Pauillac commune on the border of Saint-Julien, in the Médoc region. Rated as a First Growth in the 1855 Bordeaux Classification, it has become one of the most sought-after and expensive wine producers on the planet, and produces powerfully structured Cabernet Sauvignon-dominant wines capable of lasting many decades.",
+    supply: 10,
+  });
+
+  await CreateAssetAndToken({
+    productCode: "101187220001200750",
+    year: "2000",
+    caseId: "00000001",
+    locationId: "000",
+    taxCode: "030",
+    conditionCode: "010",
+    name: "Lafite",
+    image: "",
+    blurb:
+      "Château Lafite Rothschild is a wine estate in France, owned by members of the Rothschild family since the 19th century. The name Lafite comes from the surname of the La Fite family. Lafite was one of four wine-producing châteaux of Bordeaux originally awarded First Growth status in the 1855 Classification, which was based on the prices and wine quality at that time. Since then, it has been a consistent producer of one of the world's most expensive red wines.",
+    supply: 10,
+  });
+
+  await CreateAssetAndToken({
+    productCode: "102867419650100750",
+    name: "Domaine de la Romanee-Conti Richebourg Grand Cru",
+    year: "1965",
+    caseId: "00000001",
+    locationId: "000",
+    taxCode: "030",
+    conditionCode: "010",
+    image: "",
+    blurb:
+      "Domaine de la Romanée-Conti, often abbreviated to DRC, is an estate in Burgundy, France that produces white and red wine. It is widely considered among the world's greatest wine producers, and DRC bottles are among the world's most expensive. It takes its name from the domaine's most famous vineyard, Romanée-Conti.",
+    supply: 10,
+  });
+
+  await CreateAssetAndToken({
+    productCode: "100428520130600750",
+    name: "Penfolds Grange",
+    year: "2013",
+    caseId: "00000006",
+    locationId: "001",
+    taxCode: "001",
+    conditionCode: "001",
+    image: "",
+    blurb:
+      "Penfolds Grange (until the 1989 vintage labelled Penfolds Grange Hermitage) is an Australian wine, made predominantly from the Shiraz (Syrah) grape and usually a small percentage of Cabernet Sauvignon. It is widely considered one of Australia's 'first growth' and its most collectable wine.[1] The term 'Hermitage', the name of a French wine appellation, was commonly used in Australia as another synonym for Shiraz or Syrah. Penfolds is owned by Treasury Wine Estates.",
+    supply: 10,
+  });
+
+  await CreateAssetAndToken({
+    productCode: "108254220080600750",
+    name: "Louis Roederer Cristal",
+    year: "2008",
+    caseId: "00000365",
+    locationId: "001",
+    taxCode: "001",
+    conditionCode: "001",
+    image: "",
+    blurb:
+      "Cristal is the flagship cuvée of Champagne Louis Roederer, created in 1876 for Alexander II, tsar of Russia.",
+    supply: 10,
+  });
+
+  await CreateAssetAndToken({
+    productCode: "104380020160300750",
+    name: "Domaine Leroy Chambertin Grand Cru",
+    year: "2016",
+    locationId: "001",
+    taxCode: "001",
+    image: "",
+    caseId: "00000009",
+    conditionCode: "001",
+    blurb:
+      "Domaine Leroy is a vineyard estate which produces red Burgundy. The domaine has always produced biodynamic wine, and is certified by ECOCERT.[1] Lalou Bize-Leroy of Domaine Leroy also owns a quarter of Domaine de la Romanée-Conti. The domaine has 23 hectares of vines, mostly Premier Cru and Grand Cru classified.",
+    supply: 10,
+  });
+}
+
+async function AddAssetTest() {
   await CreateAssetAndToken({
     productCode: "101231620010600750",
     year: "2020",
@@ -190,8 +276,8 @@ async function AddAssets() {
 }
 
 (async () => {
-  process.env.NODE_ENV = "test";
-  config.mongoConnectionUrl = "mongodb://127.0.0.1:27017/dyon";
+  //process.env.NODE_ENV = "test";
+  //config.mongoConnectionUrl = "mongodb://127.0.0.1:27017/dyon";
 
   await database();
 })();
@@ -252,15 +338,59 @@ async function AddAskOrders(): Promise<void> {
   }
 }
 
+function getTimes() {
+  const y = new Date();
+  y.setDate(new Date().getDate() - 1);
+  const start = config.startDate;
+
+  const times = [];
+  for (let d = start; d <= y; d.setDate(d.getDate() + 1)) {
+    times.push(new Date(d));
+  }
+  return times;
+}
+
+async function AddPriceHistoryData(): Promise<void> {
+  const assets = await Asset.find({});
+
+  for await (const asset of assets) {
+    const times = getTimes();
+    for await (const time of times) {
+      await asset.addPriceEvent(getRand(10, 30), time);
+    }
+  }
+}
+
+async function AddCurrentPriceHistoryData(): Promise<void> {
+  const assets = await Asset.find({});
+  const now = new Date();
+
+  for await (const asset of assets) {
+    const marketPrice = await orderbook.CalculateMarketPrice(
+      asset.productIdentifier,
+      1,
+      "ASK"
+    );
+
+    await asset.addPriceEvent(marketPrice as number, now);
+  }
+}
+
 // Add some bid orders to the orderbook so market price for each asset can be calculated
 //async function AddBidOrders() {}
 
 async function main() {
   await AddUsers();
-  await AddAssets();
+  if (process.argv[2] === "prod") {
+    await AddAssetProd();
+  } else {
+    await AddAssetTest();
+  }
   await GiveUsersAssets();
   await AddBidOrders();
   await AddAskOrders();
+  await AddPriceHistoryData();
+  await AddCurrentPriceHistoryData();
 }
 
 (async () => {

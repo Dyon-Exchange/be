@@ -3,10 +3,10 @@ import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
 export class PriceEvent extends TimeStamps {
   @prop({ required: true })
-  productIdentifier!: string;
+  price!: number;
 
   @prop({ required: true })
-  price!: number;
+  time!: Date;
 }
 
 export default getModelForClass(PriceEvent);
