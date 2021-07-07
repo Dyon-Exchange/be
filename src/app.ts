@@ -7,6 +7,7 @@ import index from "./routes";
 import database from "./services/database";
 import passport from "koa-passport";
 import passportConfig from "./services/passport";
+import Asset from "./models/Asset";
 
 const app: Koa = new Koa();
 
@@ -42,9 +43,24 @@ app.use(async (ctx: Context, next: CallBackFunction) => {
 
 app.use(index.routes()).use(index.allowedMethods());
 
+// Every 15 minutes
 cron
-  .schedule("15 * * * * *", async () => {
+  .schedule("1 * * * * *", async () => {
     await Orderbook.UpdateMarketPrices();
   })
   .start();
+
+// Every day at 1am
+cron
+  //.schedule("0 3 * * *", async () => {
+  .schedule("1 * * * * *", async () => {
+    const assets = await Asset.find({});
+    for await (const asset of assets) {
+      if (asset.askMarketPrice) {
+        asset.addPriceEvent(asset.askMarketPrice, new Date());
+      }
+    }
+  })
+  .start();
+
 export default app;
