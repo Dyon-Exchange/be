@@ -1,12 +1,9 @@
 import { Context } from "koa";
 import Router, { Joi } from "koa-joi-router";
 import multer from "@koa/multer";
-import Asset from "../../models/Asset";
+import Asset, { Asset as AssetClass } from "../../models/Asset";
 import AssetPriceEvent from "../../models/AssetPriceEvent";
 import { authRequired } from "../../services/passport";
-import { Dictionary } from "lodash";
-import PriceEvent from "../../models/AssetPriceEvent";
-import config from "../../config";
 
 const upload = multer();
 const router = Router();
@@ -19,8 +16,21 @@ router.route({
   handler: async (ctx: Context) => {
     const assets = await Asset.find({});
 
+    const marketAssets: any[] = [];
+
+    await Promise.all(
+      assets.map(async (asset: any) => {
+        marketAssets.push({
+          volume: await asset.getTradingVolume(),
+          marketCap: await asset.getMarketCap(),
+          change: getRand(-15, 15),
+          ...asset.toObject(),
+        });
+      })
+    );
+
     ctx.body = {
-      assets,
+      assets: marketAssets,
     };
   },
 });
@@ -53,11 +63,13 @@ router.route({
   handler: async (ctx: Context) => {
     const user = ctx.state.user;
     const userAssets = user.assets;
-    const assets = await Asset.find({
-      productIdentifier: {
-        $in: userAssets.map((a: any) => a.productIdentifier),
-      },
-    });
+    const assets = (
+      await Asset.find({
+        productIdentifier: {
+          $in: userAssets.map((a: any) => a.productIdentifier),
+        },
+      })
+    ).map((asset) => asset.toObject());
 
     userAssets.map((userAsset: any) => {
       const filtered = assets.filter(
@@ -89,6 +101,11 @@ router.route({
     };
   },
 });
+
+function getRand(min: number, max: number): number {
+  const num = Math.random() * (max - min) + min;
+  return Number(num.toFixed(2));
+}
 
 router.put(
   "/image/:productIdentifier",
