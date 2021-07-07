@@ -352,9 +352,8 @@ function getTimes() {
 
 async function AddPriceHistoryData(): Promise<void> {
   const assets = await Asset.find({});
-
+  const times = getTimes();
   for await (const asset of assets) {
-    const times = getTimes();
     for await (const time of times) {
       await asset.addPriceEvent(getRand(10, 30), time);
     }
@@ -375,9 +374,6 @@ async function AddCurrentPriceHistoryData(): Promise<void> {
     await asset.addPriceEvent(marketPrice as number, now);
   }
 }
-
-// Add some bid orders to the orderbook so market price for each asset can be calculated
-//async function AddBidOrders() {}
 
 async function main() {
   await AddUsers();

@@ -10,7 +10,6 @@ import isEmail from "validator/lib/isEmail";
 import { hashSync } from "bcrypt";
 import { MarketOrder } from "./MarketOrder";
 import { LimitOrder } from "./LimitOrder";
-import { OrderSide } from "./Order";
 
 const SALT_ROUNDS = 12;
 
