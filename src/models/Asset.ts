@@ -32,6 +32,23 @@ export class Asset extends TimeStamps {
   @prop()
   bidMarketPrice?: number;
 
+  @prop({ required: true })
+  unitSize!: string;
+
+  @prop()
+  details?: {
+    blurb: string;
+    colour: string;
+    country: string;
+    region: string;
+    subRegion: string;
+    wineAdvocate: string;
+    decanter: string;
+    jamesSuckling: string;
+    jebDunnuck: string;
+    vinous: string;
+  };
+
   public async uploadImage(formData: any): Promise<void> {
     const bucketPath = `product-images/${this.productIdentifier}.png`;
     await uploadFile(formData, bucketPath);
@@ -80,14 +97,6 @@ export class Asset extends TimeStamps {
     }
     return token.supply * this.bidMarketPrice;
   }
-
-  @prop({ required: true })
-  unitSize!: string;
-
-  @prop()
-  details?: {
-    blurb: string;
-  };
 }
 
 export default getModelForClass(Asset);
