@@ -190,7 +190,6 @@ async function AddAssetProd() {
 (async () => {
   //process.env.NODE_ENV = "test";
   //config.mongoConnectionUrl = "mongodb://127.0.0.1:27017/dyon";
-
   await database();
 })();
 

@@ -52,8 +52,7 @@ cron
 
 // Every day at 1am
 cron
-  //.schedule("0 3 * * *", async () => {
-  .schedule("1 * * * * *", async () => {
+  .schedule("0 3 * * *", async () => {
     const assets = await Asset.find({});
     for await (const asset of assets) {
       if (asset.askMarketPrice) {
