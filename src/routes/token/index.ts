@@ -56,7 +56,18 @@ router.route({
         productIdentifier: productCode,
         year,
         name,
-        details: { blurb: "test blurb" },
+        details: {
+          blurb: "test blurb",
+          colour: "",
+          country: "",
+          region: "",
+          subRegion: "",
+          wineAdvocate: "",
+          decanter: "",
+          jamesSuckling: "",
+          jebDunnuck: "",
+          vinous: "",
+        },
         unitSize: "(6x75cl)",
       });
 
