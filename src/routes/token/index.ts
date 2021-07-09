@@ -69,6 +69,8 @@ router.route({
           vinous: "",
         },
         unitSize: "(6x75cl)",
+        changeAmount: "",
+        changePercentage: "",
       });
 
       token = await Token.create({
