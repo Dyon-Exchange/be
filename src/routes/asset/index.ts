@@ -10,6 +10,11 @@ const router = Router();
 authRequired(router);
 router.prefix("/asset");
 
+export function getRand(min: number, max: number): number {
+  const num = Math.random() * (max - min) + min;
+  return Number(num.toFixed(2));
+}
+
 router.route({
   method: "GET",
   path: "/",
@@ -23,7 +28,6 @@ router.route({
         marketAssets.push({
           volume: await asset.getTradingVolume(),
           marketCap: await asset.getMarketCap(),
-          change: getRand(-15, 15),
           ...asset.toObject(),
         });
       })
@@ -40,15 +44,14 @@ router.route({
   path: "/data/:productIdentifier",
   handler: async (ctx: Context) => {
     const { productIdentifier } = ctx.params;
-    const asset = await Asset.findOne({ productIdentifier });
+    const [asset] = await Asset.find({ productIdentifier });
+    if (!asset) {
+      ctx.throw(404, "Asset with that product identifier does not exist");
+    }
 
     const priceEvents = await AssetPriceEvent.find({
       productIdentifier,
     });
-
-    if (!asset) {
-      ctx.throw(404, "Asset with that product identifier does not exist");
-    }
 
     ctx.body = {
       asset,
@@ -101,11 +104,6 @@ router.route({
     };
   },
 });
-
-function getRand(min: number, max: number): number {
-  const num = Math.random() * (max - min) + min;
-  return Number(num.toFixed(2));
-}
 
 router.put(
   "/image/:productIdentifier",

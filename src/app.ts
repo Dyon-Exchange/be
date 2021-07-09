@@ -8,6 +8,7 @@ import database from "./services/database";
 import passport from "koa-passport";
 import passportConfig from "./services/passport";
 import Asset from "./models/Asset";
+import { getRand } from "./routes/asset/index";
 
 const app: Koa = new Koa();
 
@@ -58,6 +59,28 @@ cron
       if (asset.askMarketPrice) {
         asset.addPriceEvent(asset.askMarketPrice, new Date());
       }
+
+      const changePercentage = getRand(-15, 15);
+
+      let changeAmount = 0;
+      if (changePercentage > 0) {
+        if (asset.bidMarketPrice) {
+          changeAmount =
+            (Math.abs(changePercentage) / asset.bidMarketPrice) * 100;
+        } else {
+          changeAmount = getRand(1000, 2000);
+        }
+      } else {
+        if (asset.bidMarketPrice) {
+          changeAmount =
+            (Math.abs(changePercentage) / asset.bidMarketPrice) * 100;
+        } else {
+          changeAmount = getRand(-1000, -2000);
+        }
+      }
+      asset.changeAmount = changeAmount;
+      asset.changePercentage = changePercentage;
+      await asset.save();
     }
   })
   .start();

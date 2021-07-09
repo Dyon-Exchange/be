@@ -36,6 +36,12 @@ export class Asset extends TimeStamps {
   unitSize!: string;
 
   @prop()
+  changeAmount!: number;
+
+  @prop()
+  changePercentage!: number;
+
+  @prop()
   details?: {
     blurb: string;
     colour: string;
