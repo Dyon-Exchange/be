@@ -44,9 +44,9 @@ app.use(async (ctx: Context, next: CallBackFunction) => {
 
 app.use(index.routes()).use(index.allowedMethods());
 
-// Every 15 minutes
+// Every 1 minute
 cron
-  .schedule("1 * * * * *", async () => {
+  .schedule("* * * * *", async () => {
     await Orderbook.UpdateMarketPrices();
   })
   .start();
