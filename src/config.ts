@@ -14,7 +14,11 @@ let mongoConnectionUrl;
 if (process.env.NODE_ENV === "test") {
   mongoConnectionUrl = "mongodb://127.0.0.1:27017/dyon";
 } else {
-  mongoConnectionUrl = process.env.MONGO_URL as string;
+  if (process.env.GAE_VERSION === "staging") {
+    mongoConnectionUrl = process.env.STAGING_MONGO_URL as string;
+  } else {
+    mongoConnectionUrl = process.env.MONGO_URL as string;
+  }
 }
 
 if (!process.env.ETH_NODE_URL) {
