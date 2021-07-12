@@ -14,8 +14,6 @@ let mongoConnectionUrl;
 if (process.env.NODE_ENV === "test") {
   mongoConnectionUrl = "mongodb://127.0.0.1:27017/dyon";
 } else {
-  console.info(process.env.STAGING_MONGO_URL);
-  console.info(process.env.GAE_VERSION);
   if (process.env.GAE_VERSION === "staging") {
     mongoConnectionUrl = process.env.STAGING_MONGO_URL as string;
   } else {
@@ -45,7 +43,11 @@ if (!process.env.ORDERBOOK_URL) {
 
 let orderbookUrl;
 if (process.env.NODE_ENV !== "test") {
-  orderbookUrl = process.env.ORDERBOOK_URL;
+  if (process.env.GAE_VERSION === "staging") {
+    orderbookUrl = process.env.STAGING_ORDERBOOK_URL;
+  } else {
+    orderbookUrl = process.env.ORDERBOOK_URL;
+  }
 } else {
   orderbookUrl = "http://localhost:5341";
 }

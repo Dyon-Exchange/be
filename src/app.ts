@@ -7,6 +7,7 @@ import index from "./routes";
 import database from "./services/database";
 import passport from "koa-passport";
 import passportConfig from "./services/passport";
+import orderbook from "./services/orderbook";
 import Asset from "./models/Asset";
 import { getRand } from "./routes/asset/index";
 
@@ -43,6 +44,10 @@ app.use(async (ctx: Context, next: CallBackFunction) => {
 });
 
 app.use(index.routes()).use(index.allowedMethods());
+
+(async () => {
+  await orderbook.HealthCheck();
+})();
 
 // Every 1 minute
 cron
