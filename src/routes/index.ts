@@ -4,6 +4,7 @@ import User from "./user";
 import Token from "./token";
 import Order from "./order";
 import Asset from "./asset";
+import Tasks from "./tasks";
 
 const router = new Router<DefaultState, Context>();
 const index = async (ctx: Context) => {
@@ -18,7 +19,8 @@ router.use(
   User.Private.middleware(),
   Token.middleware(),
   Asset.middleware(),
-  Order.middleware()
+  Order.middleware(),
+  Tasks.middleware()
 );
 
 export default router;

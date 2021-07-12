@@ -1,0 +1,7 @@
+cron:
+- description: "Update change percentages"
+  url: /tasks/updateChangePercentages
+  schedule: every 24 hours
+- description: "Every 1 minute"
+  url: /tasks/updateMarketPrices
+  schedule: every 1 mins
