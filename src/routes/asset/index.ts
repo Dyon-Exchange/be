@@ -1,8 +1,10 @@
 import { Context } from "koa";
 import Router, { Joi } from "koa-joi-router";
 import multer from "@koa/multer";
+import { DocumentType } from "@typegoose/typegoose";
 import Asset, { Asset as AssetClass } from "../../models/Asset";
 import AssetPriceEvent from "../../models/AssetPriceEvent";
+
 import { authRequired } from "../../services/passport";
 
 const upload = multer();
@@ -20,12 +22,13 @@ router.route({
   path: "/",
   handler: async (ctx: Context) => {
     const assets = await Asset.find({});
-
     const marketAssets: any[] = [];
 
     await Promise.all(
-      assets.map(async (asset: any) => {
+      assets.map(async (asset: DocumentType<AssetClass>) => {
         marketAssets.push({
+          buy: await asset.getBestBuyPrice(),
+          sell: await asset.getBestSellPrice(),
           volume: await asset.getTradingVolume(),
           marketCap: await asset.getMarketCap(),
           ...asset.toObject(),

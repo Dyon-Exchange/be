@@ -103,6 +103,38 @@ export class Asset extends TimeStamps {
     }
     return token.supply * this.bidMarketPrice;
   }
+
+  public async getBestBuyPrice(): Promise<number | undefined> {
+    const [limitOrder] = await LimitOrder.find({
+      productIdentifier: this.productIdentifier,
+      side: "BID",
+      status: "PENDING",
+    })
+      .sort({ price: 1 })
+      .limit(1);
+
+    if (!limitOrder) {
+      return undefined;
+    }
+
+    return limitOrder.price;
+  }
+
+  public async getBestSellPrice(): Promise<number | undefined> {
+    const [limitOrder] = await LimitOrder.find({
+      productIdentifier: this.productIdentifier,
+      side: "ASK",
+      status: "PENDING",
+    })
+      .sort({ price: -1 })
+      .limit(1);
+
+    if (!limitOrder) {
+      return undefined;
+    }
+
+    return limitOrder.price;
+  }
 }
 
 export default getModelForClass(Asset);
