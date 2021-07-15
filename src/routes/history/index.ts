@@ -4,8 +4,6 @@ import AssetPriceEvent from "../../models/AssetPriceEvent";
 
 import { authRequired } from "../../services/passport";
 
-const { Joi } = Router;
-
 const router = Router();
 router.prefix("/history");
 authRequired(router);

@@ -80,9 +80,22 @@ async function CreateAssetAndToken(a: CreateAsset) {
     productIdentifier: a.productCode,
     year: a.year,
     name: a.name,
-    details: { blurb: a.blurb },
+    details: {
+      blurb: a.blurb,
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
     unitSize: "(6x75cl)",
     image: a.image,
+    changeAmount: "",
+    changePercentage: "",
   });
 
   const token = await Token.create({

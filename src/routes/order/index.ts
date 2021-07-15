@@ -41,19 +41,12 @@ router.route({
     const user = ctx.state.user;
     const { productIdentifier, side, quantity, price } = ctx.request.body;
 
-    try {
-      await orderbook.AddLimitOrder(
-        productIdentifier,
-        side,
-        quantity,
-        price,
-        user
-      );
-    } catch (e) {
-      ctx.throw(400, e);
-    }
+    const order = await orderbook
+      .AddLimitOrder(productIdentifier, side, quantity, price, user)
+      .catch((e) => ctx.throw(400, e));
 
     ctx.response.status = 200;
+    ctx.response.body = order;
   },
 });
 

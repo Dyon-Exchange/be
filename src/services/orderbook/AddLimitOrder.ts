@@ -33,7 +33,7 @@ export default async function AddLimitOrder(
   quantity: number,
   price: number,
   user: DocumentType<UserClass>
-): Promise<void> {
+): Promise<DocumentType<LimitOrderClass>> {
   // Check that the user has enough credit in their account to make this order if making a BID order
   if (!user.hasEnoughBalance(quantity, price) && side == "BID") {
     throw new Error(
@@ -117,4 +117,9 @@ export default async function AddLimitOrder(
   if (userOrder) {
     await user.updateCashBalanceFromOrder(priceTotal, userOrder.side);
   }
+  const order = await LimitOrder.findById(newOrder._id);
+  if (!order) {
+    throw new Error(`Refetching ${newOrder._id} failed`);
+  }
+  return order;
 }
