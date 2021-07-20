@@ -34,6 +34,12 @@ export default async function AddLimitOrder(
   price: number,
   user: DocumentType<UserClass>
 ): Promise<DocumentType<LimitOrderClass>> {
+  if (await user.hasPendingOrderOnOtherSide(productIdentifier, side)) {
+    throw new Error(
+      "You already have a pending order on the other side of this asset. Cancel that order before making a new one."
+    );
+  }
+
   // Check that the user has enough credit in their account to make this order if making a BID order
   if (!user.hasEnoughBalance(quantity, price) && side == "BID") {
     throw new Error(

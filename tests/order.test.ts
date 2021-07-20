@@ -11,6 +11,8 @@ import {
 import Order, { LimitOrder } from "../src/models/LimitOrder";
 import MarketOrder from "../src/models/MarketOrder";
 import User from "../src/models/User";
+import { OrderSide } from "../src/models/Order";
+import { getRand } from "../src/routes/asset";
 
 beforeAll(async () => {
   await setupUsers();
@@ -22,6 +24,26 @@ beforeAll(async () => {
 //   await tearDownAssets();
 //   await tearDownUsers();
 // });
+
+export async function createOrder(
+  pd: string,
+  side: OrderSide,
+  quantity: number,
+  price: number,
+  userId: string
+): Promise<LimitOrder> {
+  return await Order.create({
+    productIdentifier: pd,
+    side,
+    quantity,
+    orderId: "order" + getRand(1, 999),
+    status: "PENDING",
+    filled: 0,
+    matched: [],
+    price,
+    userId,
+  });
+}
 
 async function getUsers() {
   const [user] = await User.find({ email: "conor@labrys.io" });

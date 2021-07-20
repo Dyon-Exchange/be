@@ -13,26 +13,18 @@ import {
 } from "./common";
 import CalculateMarketPrice from "./CalculateMarketPrice";
 
-async function processMarketOrder(
-  o: DocumentType<MarketOrderClass>,
-  filled: number,
-  user: DocumentType<UserClass>,
-  price: number
-) {
-  o.status = "COMPLETE";
-  o.filled = filled;
-  await o.save();
-  await user.updateAssetQuantityFromOrder(o, filled);
-  const side = o.side === "ASK" ? "sell" : "buy";
-  await user.updateCashBalanceFromOrder(filled * price, side);
-}
-
 export default async function AddMarketOrder(
   productIdentifier: string,
   side: OrderSide,
   quantity: number,
   user: DocumentType<UserClass>
 ): Promise<DocumentType<MarketOrderClass>> {
+  if (await user.hasPendingOrderOnOtherSide(productIdentifier, side)) {
+    throw new Error(
+      "You already have a pending order on the other side of this asset. Please cancel that order before making a new one."
+    );
+  }
+
   const price = await CalculateMarketPrice(productIdentifier, quantity, side);
 
   const newOrder = await MarketOrder.create({

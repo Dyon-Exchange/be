@@ -67,7 +67,7 @@ test("PUT user asset", async () => {
   expect(user.assets.length).toBe(14);
 });
 
-async function CreateAsset(pc: string) {
+export async function CreateAsset(pc: string) {
   const asset = await Asset.create({
     productIdentifier: pc,
     year: "2020",
