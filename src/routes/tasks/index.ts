@@ -9,7 +9,11 @@ const router = Router();
 router.prefix("/tasks");
 
 router.get("/updateMarketPrices", async (ctx: Context) => {
-  await Orderbook.UpdateMarketPrices();
+  for (let i = 0; i < 55; i++) {
+    await Orderbook.UpdateMarketPrices();
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+
   ctx.response.status = 200;
   ctx.response.body = "Success";
 });

@@ -2,6 +2,6 @@ cron:
 - description: "Update change percentages"
   url: /tasks/updateChangePercentages
   schedule: every 24 hours
-- description: "Every 1 minute"
+- description: "Every 1 minutes"
   url: /tasks/updateMarketPrices
   schedule: every 1 mins

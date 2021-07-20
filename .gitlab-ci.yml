@@ -19,6 +19,11 @@ workflow:
   after_script:
     - rm /tmp/$CI_PIPELINE_ID.json
 
+deploy_cron_jobs:
+  extends: .deploy_backend
+  script:
+    - gcloud --quiet --project cru-world-wine app deploy cron.yaml
+
 deploy_backend_staging_branch:
   extends: .deploy_backend
   rules:
