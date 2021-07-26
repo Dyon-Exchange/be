@@ -107,7 +107,7 @@ export class Asset extends TimeStamps {
   public async getBestBuyPrice(): Promise<number | undefined> {
     const [limitOrder] = await LimitOrder.find({
       productIdentifier: this.productIdentifier,
-      side: "BID",
+      side: "ASK",
       status: "PENDING",
     })
       .sort({ price: 1 })
@@ -123,7 +123,7 @@ export class Asset extends TimeStamps {
   public async getBestSellPrice(): Promise<number | undefined> {
     const [limitOrder] = await LimitOrder.find({
       productIdentifier: this.productIdentifier,
-      side: "ASK",
+      side: "BID",
       status: "PENDING",
     })
       .sort({ price: -1 })
