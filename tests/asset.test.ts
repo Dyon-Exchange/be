@@ -122,26 +122,26 @@ test("Get Best Buy Price no orders", async () => {
 
 test("Get Best Buy Price", async () => {
   const asset = await CreateAsset("012481629210681477");
-  await createOrder(asset.productIdentifier, "BID", 200, 1);
-  await createOrder(asset.productIdentifier, "BID", 100, 1);
-  await createOrder(asset.productIdentifier, "BID", 300, 1);
-  expect(await asset.getBestBuyPrice()).toBe(100);
+  await createOrder(asset.productIdentifier, "ASK", 200, 1);
+  await createOrder(asset.productIdentifier, "ASK", 100, 1);
+  await createOrder(asset.productIdentifier, "ASK", 300, 1);
+  expect(await asset.getBestBuyPrice()).toBe(300);
 });
 
 test("Get Best Buy Price all equal", async () => {
   const asset = await CreateAsset("234481629210681477");
-  await createOrder(asset.productIdentifier, "BID", 200, 1);
-  await createOrder(asset.productIdentifier, "BID", 200, 1);
-  await createOrder(asset.productIdentifier, "BID", 200, 1);
+  await createOrder(asset.productIdentifier, "ASK", 200, 1);
+  await createOrder(asset.productIdentifier, "ASK", 200, 1);
+  await createOrder(asset.productIdentifier, "ASK", 200, 1);
   expect(await asset.getBestBuyPrice()).toBe(200);
 });
 
 test("Get Best Buy Price fraction", async () => {
   const asset = await CreateAsset("437312349210691477");
-  await createOrder(asset.productIdentifier, "BID", 200, 0.1);
-  await createOrder(asset.productIdentifier, "BID", 300, 0.1);
-  await createOrder(asset.productIdentifier, "BID", 1500, 0.1);
-  expect(await asset.getBestBuyPrice()).toBe(200);
+  await createOrder(asset.productIdentifier, "ASK", 200, 0.1);
+  await createOrder(asset.productIdentifier, "ASK", 300, 0.1);
+  await createOrder(asset.productIdentifier, "ASK", 1500, 0.1);
+  expect(await asset.getBestBuyPrice()).toBe(1500);
 });
 
 test("Get Best Sell Price no orders", async () => {
@@ -151,24 +151,24 @@ test("Get Best Sell Price no orders", async () => {
 
 test("Get Best Sell Price", async () => {
   const asset = await CreateAsset("321311238210691477");
-  await createOrder(asset.productIdentifier, "ASK", 200, 1);
-  await createOrder(asset.productIdentifier, "ASK", 100, 1);
-  await createOrder(asset.productIdentifier, "ASK", 300, 1);
-  expect(await asset.getBestSellPrice()).toBe(300);
+  await createOrder(asset.productIdentifier, "BID", 200, 1);
+  await createOrder(asset.productIdentifier, "BID", 100, 1);
+  await createOrder(asset.productIdentifier, "BID", 300, 1);
+  expect(await asset.getBestSellPrice()).toBe(100);
 });
 
 test("Get Best Sell price all equal", async () => {
   const asset = await CreateAsset("321311222318681477");
-  await createOrder(asset.productIdentifier, "ASK", 200, 1);
-  await createOrder(asset.productIdentifier, "ASK", 200, 1);
-  await createOrder(asset.productIdentifier, "ASK", 200, 1);
+  await createOrder(asset.productIdentifier, "BID", 200, 1);
+  await createOrder(asset.productIdentifier, "BID", 200, 1);
+  await createOrder(asset.productIdentifier, "BID", 200, 1);
   expect(await asset.getBestSellPrice()).toBe(200);
 });
 
 test("Get Best Sell price fraction", async () => {
   const asset = await CreateAsset("437322322222291477");
-  await createOrder(asset.productIdentifier, "ASK", 200, 0.1);
-  await createOrder(asset.productIdentifier, "ASK", 300, 0.1);
-  await createOrder(asset.productIdentifier, "ASK", 1500, 0.1);
-  expect(await asset.getBestSellPrice()).toBe(1500);
+  await createOrder(asset.productIdentifier, "BID", 200, 0.1);
+  await createOrder(asset.productIdentifier, "BID", 300, 0.1);
+  await createOrder(asset.productIdentifier, "BID", 1500, 0.1);
+  expect(await asset.getBestSellPrice()).toBe(200);
 });
