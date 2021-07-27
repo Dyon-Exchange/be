@@ -8,6 +8,7 @@ const gcs = new Storage({
 
 const Bucket = gcs.bucket(config.storageBucket);
 
+// eslint-disable-next-line
 export default (formData: any, bucketPath: string): Promise<void> => {
   const file = Bucket.file(bucketPath);
 

@@ -8,6 +8,9 @@ const router = Router();
 
 router.prefix("/tasks");
 
+/*
+ * Update the market prices for all assets. GCP App Engine only lets you run cron jobs every minute at most, so this cron job runs once a minute and loops on itself every second to update the market prices
+ */
 router.get("/updateMarketPrices", async (ctx: Context) => {
   for (let i = 0; i < 55; i++) {
     await Orderbook.UpdateMarketPrices();
@@ -18,6 +21,9 @@ router.get("/updateMarketPrices", async (ctx: Context) => {
   ctx.response.body = "Success";
 });
 
+/*
+ * Update change percentages for all assets, will use random values if there is no market prices available.
+ */
 router.get("/updateChangePercentages", async (ctx: Context) => {
   const assets = await Asset.find({});
   for await (const asset of assets) {

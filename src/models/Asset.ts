@@ -55,12 +55,16 @@ export class Asset extends TimeStamps {
     vinous: string;
   };
 
+  //eslint-disable-next-line
   public async uploadImage(formData: any): Promise<void> {
     const bucketPath = `product-images/${this.productIdentifier}.png`;
     await uploadFile(formData, bucketPath);
     this.image = `https://storage.googleapis.com/${config.storageBucket}/product-images/${this.productIdentifier}.png`;
   }
 
+  /*
+   * Add a new price event for this asset
+   */
   public async addPriceEvent(
     price: number,
     time: Date = new Date()
@@ -72,6 +76,9 @@ export class Asset extends TimeStamps {
     });
   }
 
+  /*
+   * Get the trading volume for the last 24 hours for this asset
+   */
   public async getTradingVolume(): Promise<number> {
     const limitOrders = await LimitOrder.find({
       productIdentifier: this.productIdentifier,
@@ -93,6 +100,9 @@ export class Asset extends TimeStamps {
     return volume;
   }
 
+  /*
+   * Get the market cap for this asset
+   */
   public async getMarketCap(): Promise<number | undefined> {
     const token = await Token.findOne({ productCode: this.productIdentifier });
     if (!token) {
@@ -104,6 +114,9 @@ export class Asset extends TimeStamps {
     return token.supply * this.bidMarketPrice;
   }
 
+  /*
+   * Get the best buy price this asset
+   */
   public async getBestBuyPrice(): Promise<number | undefined> {
     const [limitOrder] = await LimitOrder.find({
       productIdentifier: this.productIdentifier,
@@ -120,6 +133,9 @@ export class Asset extends TimeStamps {
     return limitOrder.price;
   }
 
+  /*
+   * Get the best sell price for this asset
+   */
   public async getBestSellPrice(): Promise<number | undefined> {
     const [limitOrder] = await LimitOrder.find({
       productIdentifier: this.productIdentifier,

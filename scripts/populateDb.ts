@@ -69,12 +69,13 @@ type CreateAsset = {
 
 async function CreateAssetAndToken(a: CreateAsset) {
   let txHash = "my-tx-hash";
-  // const response = await Contract.mint(
-  //   BigNumber.from(`${a.productCode}${a.caseId}${a.locationId}${a.taxCode}`),
-  //   a.supply
-  // )
-  //await response.wait();
-  //txHash = response.hash;
+  const response = await Contract.mint(
+    BigNumber.from(`${a.productCode}${a.caseId}${a.locationId}${a.taxCode}`),
+    a.supply
+  );
+
+  await response.wait();
+  txHash = response.hash;
 
   const asset = await Asset.create({
     productIdentifier: a.productCode,

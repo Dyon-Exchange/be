@@ -2,6 +2,9 @@ import { LimitOrder as LimitOrderClass } from "../../models/LimitOrder";
 import { MarketOrder as MarketOrderClass } from "../../models/MarketOrder";
 import { httpClient, OrderBookOrder } from "./common";
 
+/*
+ * Cancel an order
+ */
 export default async function CancelOrder(
   order: LimitOrderClass | MarketOrderClass
 ): Promise<void> {
@@ -12,6 +15,7 @@ export default async function CancelOrder(
   const data: OrderBookOrder = response.data.Order;
   if (data.id === order.orderId) {
     order.status = "CANCELED";
+    // eslint-disable-next-line
     // @ts-ignore
     await order.save();
   } else {

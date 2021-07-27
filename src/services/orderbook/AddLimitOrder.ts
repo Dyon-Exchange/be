@@ -1,7 +1,7 @@
 import LimitOrder, {
   LimitOrder as LimitOrderClass,
 } from "../../models/LimitOrder";
-import User, { User as UserClass } from "../../models/User";
+import { User as UserClass } from "../../models/User";
 import { v4 as uuidv4 } from "uuid";
 import { OrderSide } from "../../models/Order";
 import { DocumentType } from "@typegoose/typegoose";
@@ -27,6 +27,9 @@ function extract(
   return { filledOrders: arr, myOrder };
 }
 
+/*
+ * Add a limit order to the orderbook and process the results returned from the orderbook
+ */
 export default async function AddLimitOrder(
   productIdentifier: string,
   side: OrderSide,

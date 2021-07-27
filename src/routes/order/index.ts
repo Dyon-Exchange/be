@@ -11,6 +11,9 @@ const router = Router();
 router.prefix("/order");
 authRequired(router);
 
+/*
+ * Get all of a user's orders
+ */
 router.route({
   method: "GET",
   path: "/user",
@@ -25,6 +28,9 @@ router.route({
   },
 });
 
+/*
+ * Add a limit order to the orderbook
+ */
 router.route({
   method: "PUT",
   path: "/limitOrder",
@@ -50,6 +56,9 @@ router.route({
   },
 });
 
+/*
+ * Add a market order to the orderbook
+ */
 router.route({
   method: "PUT",
   path: "/marketOrder",
@@ -71,10 +80,13 @@ router.route({
       user
     );
     ctx.response.body = order;
-    ctx.response.status;
+    ctx.response.status = 200;
   },
 });
 
+/*
+ * Cancel an order
+ */
 router.route({
   method: "POST",
   path: "/cancelOrder",
@@ -106,6 +118,9 @@ router.route({
   },
 });
 
+/*
+ * Calculate the market price for the supplied productIdentifier, quantity and order side
+ */
 router.route({
   method: "POST",
   path: "/calculateMarketPrice",

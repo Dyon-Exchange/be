@@ -1,6 +1,9 @@
 import { OrderSide } from "../../models/Order";
 import { httpClient } from "./common";
 
+/*
+ * Calculate the market price for the specified productIdentifier, quantity and order side
+ */
 async function CalculateMarketPrice(
   productIdentifier: string,
   quantity: number,

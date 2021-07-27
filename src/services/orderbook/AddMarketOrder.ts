@@ -13,6 +13,9 @@ import {
 } from "./common";
 import CalculateMarketPrice from "./CalculateMarketPrice";
 
+/*
+ * Add a market order to the order book and process the results
+ */
 export default async function AddMarketOrder(
   productIdentifier: string,
   side: OrderSide,

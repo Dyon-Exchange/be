@@ -6,8 +6,12 @@ import { authRequired } from "../../services/passport";
 
 const router = Router();
 router.prefix("/history");
+
 authRequired(router);
 
+/*
+  Get price event history for specified data
+ */
 router.route({
   method: "GET",
   path: "/asset/:productIdentifier",

@@ -1,5 +1,6 @@
 import Fs from "fs";
 import Util from "util";
+// eslint-disable-next-line
 require("dotenv").config();
 
 // If on production write contents of google key env variable to json file for use by cloud storage

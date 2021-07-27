@@ -4,7 +4,7 @@ import { Context } from "koa";
 import config from "../../../config";
 import User from "../../../models/User";
 
-export default async (ctx: Context) => {
+export default async (ctx: Context): Promise<void> => {
   const { password, email } = ctx.request.body;
 
   const user = await User.findOne({ email });

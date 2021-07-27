@@ -10,6 +10,9 @@ authRequired(router);
 
 router.prefix("/user");
 
+/*
+ * Get user details
+ */
 router.route({
   method: "get",
   path: "/",
@@ -27,6 +30,9 @@ router.route({
   handler: get,
 });
 
+/*
+ * Test route for private routes
+ */
 router.route({
   method: "get",
   path: "/test",

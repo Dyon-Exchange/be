@@ -1,6 +1,7 @@
 import Asset from "../../models/Asset";
 import CalculateMarketPrice from "./CalculateMarketPrice";
 
+// Update market prices for all assets
 export default async function UpdateMarketPrices(): Promise<void> {
   const assets = await Asset.find();
 

@@ -1,16 +1,17 @@
 import axios from "axios";
+import { DocumentType } from "@typegoose/typegoose";
 import User, { User as UserClass } from "../../models/User";
 import LimitOrder, {
   LimitOrder as LimitOrderClass,
 } from "../../models/LimitOrder";
 import config from "../../config";
 
-import { DocumentType } from "@typegoose/typegoose";
-
+// Axios instance for interacting with the orderbook server
 export const httpClient = axios.create({
   baseURL: config.orderbookUrl,
 });
 
+// Represents an order in the orderbook
 export type OrderBookOrder = {
   side: "buy" | "sell";
   id: string;
@@ -19,17 +20,22 @@ export type OrderBookOrder = {
   price: number;
 };
 
+// Represents the response returned after adding a limit order to the orderbook
 export type AddLimitOrderResponse = {
   Done: OrderBookOrder[] | null;
   Partial: OrderBookOrder | null;
   PartialQuantityProcessed: number;
 };
+
+// Represents the response returned after adding a market order to the orderbook
 export type AddMarketOrderResponse = {
   Done: OrderBookOrder[];
   Partial: OrderBookOrder;
   PartialQuantityProcessed: number;
   QuantityLeft: number;
 };
+
+// Process a partial order returned from the orderbook
 export async function processPartialOrder(
   o: OrderBookOrder,
   filled: number,
@@ -44,6 +50,7 @@ export async function processPartialOrder(
   }
 }
 
+// Process a done order returned from the orderbook
 export async function processDoneOrder(
   o: OrderBookOrder,
   updateCashBalance: boolean
@@ -61,6 +68,8 @@ export async function processDoneOrder(
     );
   }
 }
+
+// Get user and order model from mongo from and OrderBookOrder
 export async function getOrderAndUserModel(o: OrderBookOrder): Promise<{
   order: DocumentType<LimitOrderClass>;
   user: DocumentType<UserClass>;

@@ -1,1 +1,0 @@
-type CallBackFunction = () => void;

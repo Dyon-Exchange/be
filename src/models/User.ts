@@ -14,6 +14,12 @@ import LimitOrder, { LimitOrder as LimitOrderClass } from "./LimitOrder";
 
 const SALT_ROUNDS = 12;
 
+type UserOwnedAsset = {
+  productIdentifier: string;
+  quantity: number;
+};
+
+// eslint-disable-next-line
 @pre<User>("save", function (next: any) {
   if (this.isModified("password")) {
     this.password = hashSync(this.password, SALT_ROUNDS);
@@ -52,10 +58,7 @@ export class User extends TimeStamps {
   public cashBalance!: number;
 
   @prop({ required: true })
-  public assets!: {
-    productIdentifier: string;
-    quantity: number;
-  }[];
+  public assets!: UserOwnedAsset[];
 
   public getFullName(): string {
     return `${this.firstName} ${this.lastName}`;
@@ -66,7 +69,7 @@ export class User extends TimeStamps {
    */
   public getAssetQuantity(productIdentifier: string): number {
     const asset = this.assets.filter(
-      (a: any) => a.productIdentifier === productIdentifier
+      (a: any) => a.productIdentifier === productIdentifier //eslint-disable-line
     )[0];
     if (asset) {
       return asset.quantity;
@@ -83,7 +86,7 @@ export class User extends TimeStamps {
     quantity: number
   ): Promise<void> {
     const index = this.assets.findIndex(
-      (a: any) => a.productIdentifier === productIdentifier
+      (a: any) => a.productIdentifier === productIdentifier // eslint-disable-line
     );
 
     if (index === -1) {
@@ -91,9 +94,11 @@ export class User extends TimeStamps {
         productIdentifier,
         quantity,
       });
+      // eslint-disable-next-line
       // @ts-ignore
       await this.save();
     } else {
+      // eslint-disable-next-line
       // @ts-ignore
       await this.update(
         {
@@ -117,7 +122,7 @@ export class User extends TimeStamps {
     quantity: number
   ): Promise<void> {
     const index = this.assets.findIndex(
-      (a: any) => a.productIdentifier === productIdentifier
+      (a: any) => a.productIdentifier === productIdentifier // eslint-disable-line
     );
 
     if (index === -1) {
@@ -128,6 +133,7 @@ export class User extends TimeStamps {
       if (this.assets[index].quantity - quantity === 0) {
         this.assets.splice(index, 1);
       } else {
+        // eslint-disable-next-line
         // @ts-ignore
         await this.update(
           {
@@ -151,10 +157,6 @@ export class User extends TimeStamps {
     order: MarketOrder | LimitOrderClass,
     filled: number
   ): Promise<void> {
-    const index = this.assets.findIndex(
-      (a: any) => a.productIdentifier === order.productIdentifier
-    );
-
     if (order.side === "ASK") {
       await this.minusAsset(order.productIdentifier, filled);
     } else if (order.side === "BID") {
@@ -162,6 +164,7 @@ export class User extends TimeStamps {
     } else {
       throw new Error("Invalid order side");
     }
+    // eslint-disable-next-line
     // @ts-ignore
     await this.save();
   }
@@ -180,6 +183,7 @@ export class User extends TimeStamps {
     } else {
       throw new Error("Invalid order side");
     }
+    // eslint-disable-next-line
     // @ts-ignore
     await this.save();
   }
@@ -200,10 +204,12 @@ export class User extends TimeStamps {
     side: OrderSide
   ): Promise<boolean> {
     const otherSide = side === "ASK" ? "BID" : "ASK";
+    // eslint-disable-next-line
     //@ts-ignore
     const orders = await LimitOrder.find({
       productIdentifier,
       side: otherSide,
+      // eslint-disable-next-line
       // @ts-ignore
       userId: this._id,
       status: "PENDING",

@@ -17,12 +17,15 @@ export function getRand(min: number, max: number): number {
   return Number(num.toFixed(2));
 }
 
+/*
+ * Get data about all assets
+ */
 router.route({
   method: "GET",
   path: "/",
   handler: async (ctx: Context) => {
     const assets = await Asset.find({});
-    const marketAssets: any[] = [];
+    const marketAssets: any[] = []; // eslint-disable-line
 
     await Promise.all(
       assets.map(async (asset: DocumentType<AssetClass>) => {
@@ -42,6 +45,9 @@ router.route({
   },
 });
 
+/*
+ * Get data for a specific asset
+ */
 router.route({
   method: "GET",
   path: "/data/:productIdentifier",
@@ -63,20 +69,24 @@ router.route({
   },
 });
 
+/**
+ * Get user asset details
+ */
 router.route({
   method: "GET",
   path: "/user",
   handler: async (ctx: Context) => {
     const user = ctx.state.user;
-    const userAssets = user.assets;
+    const userAssets: any = user.assets; // eslint-disable-line
     const assets = (
       await Asset.find({
         productIdentifier: {
-          $in: userAssets.map((a: any) => a.productIdentifier),
+          $in: userAssets.map((a: any) => a.productIdentifier), //eslint-disable-line
         },
       })
     ).map((asset) => asset.toObject());
 
+    // eslint-disable-next-line
     userAssets.map((userAsset: any) => {
       const filtered = assets.filter(
         (asset) => asset.productIdentifier == userAsset.productIdentifier
@@ -84,6 +94,7 @@ router.route({
       userAsset.asset = filtered[0];
     });
 
+    //eslint-disable-next-line
     let portfolioBalance = userAssets.reduce((acc: any, curr: any) => {
       if (curr.asset.askMarketPrice) {
         acc += curr.quantity * curr.asset.askMarketPrice;
@@ -92,6 +103,7 @@ router.route({
     }, 0);
     portfolioBalance += user.cashBalance;
 
+    //eslint-disable-next-line
     userAssets.map((userAsset: any) => {
       if (userAsset.asset.askMarketPrice) {
         userAsset.portfolioShare =
@@ -108,6 +120,9 @@ router.route({
   },
 });
 
+/*
+ * Add an image for an asset
+ */
 router.put(
   "/image/:productIdentifier",
   upload.single("image"),
@@ -129,6 +144,9 @@ router.put(
   }
 );
 
+/*
+ * Update a user's quantity of an asset
+ */
 router.route({
   method: "PUT",
   path: "/user",

@@ -1,10 +1,12 @@
-import User from "./src/models/User";
-import Asset from "./src/models/Asset";
-import Token from "./src/models/Token";
-import config from "./src/config";
-import orderbook from "./src/services/orderbook";
-import database from "./src/services/database";
-import LimitOrder from "./src/models/LimitOrder";
+import { BigNumber } from "@ethersproject/bignumber";
+import User from "../src/models/User";
+import Asset from "../src/models/Asset";
+import Token from "../src/models/Token";
+import config from "../src/config";
+import orderbook from "../src/services/orderbook";
+import database from "../src/services/database";
+import LimitOrder from "../src/models/LimitOrder";
+import Contract from "../src/services/contracts";
 
 function Image(productIdentifier: string) {
   return `https://storage.googleapis.com/dyon/product-images/${productIdentifier}.png`;
@@ -72,13 +74,17 @@ type CreateAsset = {
 };
 
 async function CreateAssetAndToken(a: CreateAsset) {
-  let txHash = "my-tx-hash";
-  // const response = await Contract.mint(
-  //   BigNumber.from(`${a.productCode}${a.caseId}${a.locationId}${a.taxCode}`),
-  //   a.supply
-  // )
-  //await response.wait();
-  //txHash = response.hash;
+  const tokenId = `${a.productCode}${a.caseId}${a.locationId}${a.taxCode}${a.conditionCode}`;
+  let txHash = "";
+  const response = await Contract.mint(
+    BigNumber.from(tokenId),
+    a.supply,
+
+    { gasLimit: 12487794 }
+  );
+  await response.wait();
+  txHash = response.hash;
+  console.log({ txHash });
 
   const asset = await Asset.create({
     productIdentifier: a.productCode,
@@ -108,7 +114,7 @@ async function CreateAssetAndToken(a: CreateAsset) {
     locationId: a.locationId,
     conditionCode: a.conditionCode,
     taxCode: "001",
-    tokenId: `${a.productCode}${a.caseId}${a.locationId}${a.taxCode}${a.conditionCode}`,
+    tokenId,
     productIdentifier: `${a.productCode}${a.locationId}${a.taxCode}${a.conditionCode}`,
     supply: a.supply,
   });

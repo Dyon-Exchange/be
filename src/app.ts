@@ -28,7 +28,8 @@ app.use(
 passportConfig(passport);
 app.use(passport.initialize());
 
-app.use(async (ctx: Context, next: CallBackFunction) => {
+// eslint-disable-next-line
+app.use(async (ctx: Context, next: any) => {
   try {
     await next();
   } catch (err) {

@@ -1,15 +1,22 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { Context } from "koa";
 import Router from "koa-joi-router";
+import { DocumentType } from "@typegoose/typegoose";
 import Asset, { Asset as AssetType } from "../../models/Asset";
 import Token, { Token as TokenType } from "../../models/Token";
-import Contract from "../../services/contracts";
+import Contract, { Wallet } from "../../services/contracts";
+import { User as UserClass } from "../../models/User";
+import { authRequired } from "../../services/passport";
 
 const { Joi } = Router;
 
 const router = Router();
 router.prefix("/token");
+authRequired(router);
 
+/*
+ * Add a new asset and mint token
+ */
 router.route({
   method: "PUT",
   path: "/",
@@ -43,11 +50,11 @@ router.route({
     let txHash = "";
 
     try {
+      const tokenId = `${productCode}${caseId}${locationId}${taxCode}${conditionCode}`;
       if (process.env.NODE_ENV !== "test") {
-        const response = await Contract.mint(
-          BigNumber.from(`${productCode}${caseId}${locationId}${taxCode}`),
-          supply
-        );
+        const response = await Contract.mint(BigNumber.from(tokenId), supply, {
+          gasLimit: 37411,
+        });
         await response.wait();
         txHash = response.hash;
       }
@@ -79,7 +86,7 @@ router.route({
         locationId,
         taxCode,
         conditionCode,
-        tokenId: `${productCode}${caseId}${locationId}${taxCode}${conditionCode}`,
+        tokenId,
         productIdentifier: `${productCode}${locationId}${taxCode}${conditionCode}`,
         supply,
       });
@@ -95,6 +102,9 @@ router.route({
   },
 });
 
+/*
+ * Get token information for supplied tokenId
+ */
 router.route({
   method: "GET",
   path: "/:tokenId",
@@ -108,6 +118,9 @@ router.route({
   },
 });
 
+/*
+ * Get token metadata for the specified tokenId
+ */
 router.route({
   method: "GET",
   path: "/metadata/:tokenId.json",
@@ -140,6 +153,82 @@ router.route({
     };
 
     ctx.status = 200;
+  },
+});
+
+/*
+ * Redeemed token
+ */
+router.route({
+  method: "POST",
+  path: "/redeem",
+  handler: async (ctx: Context) => {
+    const user = ctx.state.user as DocumentType<UserClass>;
+    //const user = ctx.state.user;
+    console.log({ user });
+    const {
+      toRedeem,
+    }: { toRedeem: { productIdentifier: string; units: number }[] } =
+      ctx.request.body;
+
+    const redeemed: {
+      productIdentifier: string;
+      units: number;
+      txHash: string;
+    }[] = [];
+
+    console.log(toRedeem);
+
+    await Promise.all(
+      toRedeem.map(async ({ productIdentifier, units }) => {
+        console.log({ productIdentifier, units });
+
+        const asset = await Asset.findOne({ productIdentifier });
+        if (!asset) {
+          ctx.throw(400, `Asset ${productIdentifier} does not exist`);
+        }
+        const token = await Token.findOne({ productCode: productIdentifier });
+        if (!token) {
+          ctx.throw(400, `Token ${productIdentifier} does not exist`);
+        }
+
+        if (token.supply < units) {
+          ctx.throw(400, `Cannot burn more tokens than exists`);
+        }
+
+        if (user.getAssetQuantity(productIdentifier) < units) {
+          ctx.throw(
+            401,
+            `You do not have enough of ${productIdentifier} to redeem this amount of tokens`
+          );
+        }
+        const response = await Contract.burn(
+          Wallet.address,
+          BigNumber.from(token.tokenId),
+          units,
+          {
+            gasLimit: 12487794,
+          }
+        );
+
+        await response.wait();
+
+        redeemed.push({
+          productIdentifier,
+          units,
+          txHash: response.hash,
+        });
+
+        await user.minusAsset(productIdentifier, units);
+        await user.save();
+
+        token.supply = token.supply - units;
+        await token.save();
+      })
+    );
+
+    ctx.response.status = 200;
+    ctx.response.body = { redeemed };
   },
 });
 
