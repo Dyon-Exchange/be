@@ -153,4 +153,11 @@ router.route({
   },
 });
 
+router.get("/orderbook/:productIdentifier", async (ctx: Context) => {
+  const { productIdentifier } = ctx.params;
+  const orders = await orderbook.GetOrders(productIdentifier);
+  ctx.response.body = orders;
+  ctx.response.status = 200;
+});
+
 export default router;
