@@ -42,6 +42,7 @@ export async function createOrder(
     matched: [],
     price,
     userId,
+    filledPrice: 0,
   });
 }
 
@@ -164,7 +165,6 @@ test("Limit order gets filled and user quantity updated, second user doesn't own
   expect(q2).toBe(0);
 
   await sendLimitOrder(productIdentifier, "ASK", 10, 10, token);
-
   await sendLimitOrder(productIdentifier, "BID", 10, 10, token2);
 
   const [user] = await User.find({ email: "conor@labrys.io" });
@@ -671,4 +671,75 @@ test("Market price bid order. No liquidity.", async () => {
 
   const res = await sendMarketOrder(productIdentifier, "BID", 1, token);
   expect(res.body.order.status).toBe("CANNOT-FILL");
+});
+
+test.only("Test order fill price is correct, both orders completes", async () => {
+  const [token, token2] = await getLoginToken();
+  const productIdentifier = "771234699991211111";
+  let [user, user2] = await getUsers();
+
+  await sendLimitOrder(productIdentifier, "ASK", 1, 100, token);
+  await sendLimitOrder(productIdentifier, "BID", 1, 150, token2);
+
+  const [order1] = await Order.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+  });
+
+  const [order2] = await Order.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+  });
+  expect(order1.filledPrice).toBe(100);
+  expect(order2.filledPrice).toBe(100);
+});
+
+test.only("Test order fill price is correct, sell order partially completes", async () => {
+  const [token, token2] = await getLoginToken();
+  const productIdentifier = "771234699991211123";
+  const [user, user2] = await getUsers();
+
+  await sendLimitOrder(productIdentifier, "ASK", 2, 100, token);
+  await sendLimitOrder(productIdentifier, "BID", 1, 150, token2);
+
+  const [order1] = await Order.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+  });
+
+  const [order2] = await Order.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+  });
+
+  expect(order1.filledPrice).toBe(100);
+  expect(order2.filledPrice).toBe(100);
+});
+
+test.only("Test order fill price is correct, buy order partial completes", async () => {
+  const [token, token2] = await getLoginToken();
+  const productIdentifier = "771234699991218900";
+  const [user, user2] = await getUsers();
+
+  await sendLimitOrder(productIdentifier, "ASK", 1, 200, token);
+  await sendLimitOrder(productIdentifier, "BID", 2, 250, token2);
+
+  const [order1] = await Order.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+  });
+
+  const [order2] = await Order.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+  });
+
+  expect(order1.filledPrice).toBe(200);
+  expect(order2.filledPrice).toBe(200);
 });

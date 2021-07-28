@@ -1,10 +1,10 @@
-import User from "./src/models/User";
-import Asset from "./src/models/Asset";
-import Token from "./src/models/Token";
-import config from "./src/config";
-import orderbook from "./src/services/orderbook";
-import database from "./src/services/database";
-import LimitOrder from "./src/models/LimitOrder";
+import User from "../src/models/User";
+import Asset from "../src/models/Asset";
+import Token from "../src/models/Token";
+import config from "../src/config";
+import orderbook from "../src/services/orderbook";
+import database from "../src/services/database";
+import LimitOrder from "../src/models/LimitOrder";
 
 async function AddUsers() {
   const password = "password";

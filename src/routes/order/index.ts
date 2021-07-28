@@ -73,12 +73,10 @@ router.route({
   handler: async (ctx: Context) => {
     const user = ctx.state.user;
     const { productIdentifier, side, quantity } = ctx.request.body;
-    const order = await orderbook.AddMarketOrder(
-      productIdentifier,
-      side,
-      quantity,
-      user
-    );
+    const order = await orderbook
+      .AddMarketOrder(productIdentifier, side, quantity, user)
+      .catch((e) => ctx.throw(400, e));
+
     ctx.response.body = order;
     ctx.response.status = 200;
   },

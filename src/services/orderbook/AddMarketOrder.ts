@@ -40,6 +40,7 @@ export default async function AddMarketOrder(
     filled: 0,
     matched: [],
     price: Number(price),
+    filledPrice: 0,
   });
 
   await newOrder.save();

@@ -43,6 +43,7 @@ export async function processPartialOrder(
 ): Promise<void> {
   const { order, user } = await getOrderAndUserModel(o);
   order.filled = order.filled + filled;
+  order.filledPrice = order.filledPrice + filled * order.price;
   await order.save();
   await user.updateAssetQuantityFromOrder(order, filled);
   if (updateCashBalance) {
@@ -59,6 +60,8 @@ export async function processDoneOrder(
   order.status = "COMPLETE";
   const filled = order.filled;
   order.filled = order.quantity;
+  order.filledPrice =
+    order.filledPrice + (order.quantity - filled) * order.price;
   await order.save();
   await user.updateAssetQuantityFromOrder(order, order.quantity - filled);
   if (updateCashBalance) {

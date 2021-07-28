@@ -521,6 +521,90 @@ export async function setupAssets() {
     changePercentage: "",
   });
 
+  const asset21 = await Asset.create({
+    year: "2020",
+    name: "Example 21",
+    productIdentifier: "771234699991211111",
+    unitSize: "jashdf",
+    details: {
+      blurb: "",
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
+    changeAmount: "",
+    changePercentage: "",
+  });
+
+  const asset22 = await Asset.create({
+    year: "2020",
+    name: "Example 21",
+    productIdentifier: "771234699991211123",
+    unitSize: "jashdf",
+    details: {
+      blurb: "",
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
+    changeAmount: "",
+    changePercentage: "",
+  });
+
+  const asset23 = await Asset.create({
+    year: "2020",
+    name: "Example 21",
+    productIdentifier: "771234699991218900",
+    unitSize: "jashdf",
+    details: {
+      blurb: "",
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
+    changeAmount: "",
+    changePercentage: "",
+  });
+
+  const asset24 = await Asset.create({
+    year: "2020",
+    name: "Example 21",
+    productIdentifier: "771234693231381100",
+    unitSize: "jashdf",
+    details: {
+      blurb: "",
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
+    changeAmount: "",
+    changePercentage: "",
+  });
+
   const user = await User.findOne({ email: "conor@labrys.io" });
   if (!user) {
     throw new Error();
@@ -546,6 +630,10 @@ export async function setupAssets() {
     { productIdentifier: asset18.productIdentifier, quantity: 50 },
     { productIdentifier: asset19.productIdentifier, quantity: 50 },
     { productIdentifier: asset20.productIdentifier, quantity: 50 },
+    { productIdentifier: asset21.productIdentifier, quantity: 50 },
+    { productIdentifier: asset22.productIdentifier, quantity: 50 },
+    { productIdentifier: asset23.productIdentifier, quantity: 50 },
+    { productIdentifier: asset24.productIdentifier, quantity: 50 },
   ];
   await user.save();
 

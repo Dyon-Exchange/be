@@ -35,5 +35,8 @@ export default abstract class Order extends TimeStamps {
   @prop({ required: true })
   price!: number;
 
+  @prop({ required: true })
+  filledPrice!: number;
+
   matched!: string[];
 }

@@ -68,6 +68,7 @@ export default async function AddLimitOrder(
     status: "PENDING",
     filled: 0,
     matched: [],
+    filledPrice: 0,
   });
   await newOrder.save();
 
@@ -130,5 +131,7 @@ export default async function AddLimitOrder(
   if (!order) {
     throw new Error(`Refetching ${newOrder._id} failed`);
   }
+  order.filledPrice = priceTotal;
+  await order.save();
   return order;
 }
