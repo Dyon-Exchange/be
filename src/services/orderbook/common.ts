@@ -35,15 +35,27 @@ export type AddMarketOrderResponse = {
   QuantityLeft: number;
 };
 
-// Process a partial order returned from the orderbook
+/**
+ * Process a partial order returned from the orderbook
+ * @param o partially completed order to process
+ * @param filled amount of the partially completed order that filled
+ * @param updateCashBalance whether to update the user's cashBalance or not
+ * @param weightedAverages array to add this orders weighted price to
+ */
 export async function processPartialOrder(
   o: OrderBookOrder,
   filled: number,
-  updateCashBalance: boolean
+  updateCashBalance: boolean,
+  weightedAverages?: number[]
 ): Promise<void> {
   const { order, user } = await getOrderAndUserModel(o);
   order.filled = order.filled + filled;
-  order.filledPrice = order.filledPrice + filled * order.price;
+  order.filledPriceTotal = order.filledPriceTotal + filled * order.price;
+
+  // Add weighted fill price to the matched order's weightedAverages array
+  if (weightedAverages) {
+    weightedAverages.push(filled * order.price);
+  }
   await order.save();
   await user.updateAssetQuantityFromOrder(order, filled);
   if (updateCashBalance) {
@@ -51,17 +63,26 @@ export async function processPartialOrder(
   }
 }
 
-// Process a done order returned from the orderbook
+/**
+ * Process a done order returned from the orderbook
+ * @param o completed order to process
+ * @param updateCashBalance whether to update the user's cashBalance or not
+ * @param weightedAverages array to add this orders weighted price to
+ */
 export async function processDoneOrder(
   o: OrderBookOrder,
-  updateCashBalance: boolean
+  updateCashBalance: boolean,
+  weightedAverages?: number[]
 ): Promise<void> {
   const { order, user } = await getOrderAndUserModel(o);
   order.status = "COMPLETE";
   const filled = order.filled;
   order.filled = order.quantity;
-  order.filledPrice =
-    order.filledPrice + (order.quantity - filled) * order.price;
+  order.filledPriceTotal =
+    order.filledPriceTotal + (order.quantity - filled) * order.price;
+  if (weightedAverages) {
+    weightedAverages.push(filled * order.price);
+  }
   await order.save();
   await user.updateAssetQuantityFromOrder(order, order.quantity - filled);
   if (updateCashBalance) {
@@ -72,7 +93,11 @@ export async function processDoneOrder(
   }
 }
 
-// Get user and order model from mongo from and OrderBookOrder
+/**
+ * Get user and order model from mongo from and OrderBookOrder
+ * @param o order to get the mongo document and user for
+ * @returns order and user mongo documents
+ */
 export async function getOrderAndUserModel(o: OrderBookOrder): Promise<{
   order: DocumentType<LimitOrderClass>;
   user: DocumentType<UserClass>;

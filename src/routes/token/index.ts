@@ -164,8 +164,6 @@ router.route({
   path: "/redeem",
   handler: async (ctx: Context) => {
     const user = ctx.state.user as DocumentType<UserClass>;
-    //const user = ctx.state.user;
-    console.log({ user });
     const {
       toRedeem,
     }: { toRedeem: { productIdentifier: string; units: number }[] } =
@@ -176,8 +174,6 @@ router.route({
       units: number;
       txHash: string;
     }[] = [];
-
-    console.log(toRedeem);
 
     await Promise.all(
       toRedeem.map(async ({ productIdentifier, units }) => {

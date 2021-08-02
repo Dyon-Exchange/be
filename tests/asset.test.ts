@@ -112,7 +112,8 @@ async function createOrder(
     status: "PENDING",
     filled: 0,
     matched: [],
-    filledPrice: 0,
+    filledPriceTotal: 0,
+    filledPriceAverage: 0,
   });
 }
 

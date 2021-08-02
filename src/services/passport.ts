@@ -4,11 +4,13 @@ import { sign, verify } from "jsonwebtoken";
 import UserModel, { User } from "../models/User";
 import config from "../config";
 
+// passport options
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: config.tokenSecret,
 };
 
+// Represents a fresh token for jwt
 interface RefreshToken {
   id: string;
   iat: number;
@@ -58,7 +60,7 @@ export async function processRefreshToken(
     id: entity._id,
   };
 
-  const token = sign(payload, config.tokenSecret, { expiresIn: 36000 });
+  const token = sign(payload, config.tokenSecret, { expiresIn: 900 }); //Tokens expire in 15 minutes
   const newRefreshToken = sign(payload, config.refreshSecret, {
     expiresIn: "7d",
   });

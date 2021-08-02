@@ -2,8 +2,9 @@ import { LimitOrder as LimitOrderClass } from "../../models/LimitOrder";
 import { MarketOrder as MarketOrderClass } from "../../models/MarketOrder";
 import { httpClient, OrderBookOrder } from "./common";
 
-/*
+/**
  * Cancel an order
+ * @param order to cancel
  */
 export default async function CancelOrder(
   order: LimitOrderClass | MarketOrderClass

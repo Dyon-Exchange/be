@@ -59,35 +59,35 @@ test("Test login with incorrect login details", async () => {
   expect(response.status).toBe(404);
 });
 
-test("Test accessing private route with token", async () => {
-  let response = await request(app.callback()).post("/user/login").send({
-    email: "conor@labrys.io",
-    password: "password",
-  });
+// test("Test accessing private route with token", async () => {
+//   let response = await request(app.callback()).post("/user/login").send({
+//     email: "conor@labrys.io",
+//     password: "password",
+//   });
 
-  const { token } = response.body;
+//   const { token } = response.body;
 
-  response = await request(app.callback())
-    .get("/user/test")
-    .set({
-      Authorization: `Bearer ${token}`,
-    });
+//   response = await request(app.callback())
+//     .get("/user/test")
+//     .set({
+//       Authorization: `Bearer ${token}`,
+//     });
 
-  expect(response.status).toBe(200);
-});
+//   expect(response.status).toBe(200);
+// });
 
-test("Test accessing private route with no token", async () => {
-  const response = await request(app.callback()).get("/user/test");
-  expect(response.status).toBe(401);
-});
+// test("Test accessing private route with no token", async () => {
+//   const response = await request(app.callback()).get("/user/test");
+//   expect(response.status).toBe(401);
+// });
 
-test("Test accessing private route with invalid token", async () => {
-  const response = await request(app.callback()).get("/user/test").set({
-    Authorization: `Bearer not-a-token`,
-  });
+// test("Test accessing private route with invalid token", async () => {
+//   const response = await request(app.callback()).get("/user/test").set({
+//     Authorization: `Bearer not-a-token`,
+//   });
 
-  expect(response.status).toBe(401);
-});
+//   expect(response.status).toBe(401);
+// });
 
 test("Test get user details of current user", async () => {
   let response = await request(app.callback()).post("/user/login").send({

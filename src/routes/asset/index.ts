@@ -12,6 +12,12 @@ const router = Router();
 authRequired(router);
 router.prefix("/asset");
 
+/**
+ *
+ * @param min minimum of range to get random number in
+ * @param max maximum of range to get random in
+ * @returns random number between range
+ */
 export function getRand(min: number, max: number): number {
   const num = Math.random() * (max - min) + min;
   return Number(num.toFixed(2));

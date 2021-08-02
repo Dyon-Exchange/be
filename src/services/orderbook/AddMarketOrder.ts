@@ -13,8 +13,13 @@ import {
 } from "./common";
 import CalculateMarketPrice from "./CalculateMarketPrice";
 
-/*
+/**
  * Add a market order to the order book and process the results
+ * @param productIdentifier asset to place the market order for
+ * @param side to add the order on
+ * @param quantity of the order
+ * @param user user to add the order on behalf of
+ * @returns the new market order mongo document
  */
 export default async function AddMarketOrder(
   productIdentifier: string,
@@ -40,7 +45,9 @@ export default async function AddMarketOrder(
     filled: 0,
     matched: [],
     price: Number(price),
-    filledPrice: 0,
+    filledPriceTotal: 0,
+    filledPriceAverage: 0,
+    weightedPriceAverages: [],
   });
 
   await newOrder.save();

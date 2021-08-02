@@ -61,6 +61,11 @@ const storageBucket = process.env.STORAGE_BUCKET;
 
 const startDate = new Date(2021, 4, 1);
 
+const saltRounds = process.env.SALT_ROUNDS;
+if (!saltRounds) {
+  throw new Error("saltRounds is missing");
+}
+
 export default {
   mongoConnectionUrl,
   tokenSecret: "secret",
@@ -71,4 +76,5 @@ export default {
   gcloudProjectId,
   orderbookUrl,
   startDate,
+  saltRounds,
 };

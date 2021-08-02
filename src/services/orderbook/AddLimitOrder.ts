@@ -13,6 +13,12 @@ import {
   processDoneOrder,
 } from "./common";
 
+/**
+ * Extract the user's order from the returned orders from the orderbook
+ * @param arr orders returned from the orderbook
+ * @param orderId user's order id so
+ * @returns array and user's order
+ */
 function extract(
   arr: OrderBookOrder[],
   orderId: string
@@ -27,8 +33,14 @@ function extract(
   return { filledOrders: arr, myOrder };
 }
 
-/*
+/**
  * Add a limit order to the orderbook and process the results returned from the orderbook
+ * @param productIdentifier for asset to add the limit order for
+ * @param side of the order being added
+ * @param quantity of the order being added
+ * @param price of the order being added
+ * @param user that the user is being added for
+ * @returns Mongo document for new order created
  */
 export default async function AddLimitOrder(
   productIdentifier: string,
@@ -68,7 +80,9 @@ export default async function AddLimitOrder(
     status: "PENDING",
     filled: 0,
     matched: [],
-    filledPrice: 0,
+    filledPriceTotal: 0,
+    filledPriceAverage: 0,
+    weightedPriceAverages: [],
   });
   await newOrder.save();
 
@@ -86,6 +100,7 @@ export default async function AddLimitOrder(
   const data: AddLimitOrderResponse = response.data;
 
   let priceTotal = 0; // how much the user that initiated the order has spent. ASK/BID limit orders may have filled at prices above or below their limit
+  const weightedPriceAverages: number[] = [];
   let userOrder; // find the user's order from the returned done and partial orders from the orderbook
 
   // Process the completed orders from the order book
@@ -101,8 +116,8 @@ export default async function AddLimitOrder(
     for await (const o of filledOrders) {
       if (newOrder.orderId !== o.id) {
         priceTotal += o.price * o.quantity;
+        await processDoneOrder(o, true, weightedPriceAverages);
       }
-      await processDoneOrder(o, true);
     }
   }
 
@@ -131,7 +146,7 @@ export default async function AddLimitOrder(
   if (!order) {
     throw new Error(`Refetching ${newOrder._id} failed`);
   }
-  order.filledPrice = priceTotal;
+  order.filledPriceTotal = priceTotal;
   await order.save();
   return order;
 }

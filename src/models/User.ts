@@ -9,10 +9,9 @@ import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 import isEmail from "validator/lib/isEmail";
 import { hashSync } from "bcrypt";
 import { OrderSide } from "./Order";
+import config from "../config";
 import { MarketOrder } from "./MarketOrder";
 import LimitOrder, { LimitOrder as LimitOrderClass } from "./LimitOrder";
-
-const SALT_ROUNDS = 12;
 
 type UserOwnedAsset = {
   productIdentifier: string;
@@ -22,7 +21,7 @@ type UserOwnedAsset = {
 // eslint-disable-next-line
 @pre<User>("save", function (next: any) {
   if (this.isModified("password")) {
-    this.password = hashSync(this.password, SALT_ROUNDS);
+    this.password = hashSync(this.password, Number(config.saltRounds));
   }
 
   next();
@@ -60,12 +59,17 @@ export class User extends TimeStamps {
   @prop({ required: true })
   public assets!: UserOwnedAsset[];
 
+  /**
+   * @returns full name for this user
+   */
   public getFullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
 
   /**
    * Return the quantity of an asset that a user owns
+   * @param productIdentifier of asset to get how much a user owns of
+   * @returns quantity of asset
    */
   public getAssetQuantity(productIdentifier: string): number {
     const asset = this.assets.filter(
@@ -80,7 +84,9 @@ export class User extends TimeStamps {
 
   /**
    * Increment a user's quantity of an asset
-   * */
+   * @param productIdentifier of asset to add
+   * @param quantity quantity to add
+   */
   public async addAsset(
     productIdentifier: string,
     quantity: number
@@ -116,7 +122,9 @@ export class User extends TimeStamps {
 
   /**
    * Decrement a user's quantity of an asset
-   * */
+   * @param productIdentifier of asset to decrement
+   * @param quantity quantity to decrement
+   */
   public async minusAsset(
     productIdentifier: string,
     quantity: number
@@ -152,7 +160,9 @@ export class User extends TimeStamps {
 
   /**
    * Updates the user's asset balance from an order. Needs the order and the amount filled.
-   * */
+   * @param order order to update the asset balance from
+   * @param filled the quantity of the order that has filled
+   */
   public async updateAssetQuantityFromOrder(
     order: MarketOrder | LimitOrderClass,
     filled: number
@@ -170,7 +180,9 @@ export class User extends TimeStamps {
   }
 
   /**
-      Updates the user's cash balance from an order. Needs the amount to update by and the side of the order
+   * Updates the user's cash balance from an order. Needs the amount to update by and the side of the order
+   * @param amount amount to increment or decrement a user's balance by
+   * @param orderSide side of the order to update the balance. Depending on what side, the balance will be incremented or decremented /
    */
   public async updateCashBalanceFromOrder(
     amount: number,
@@ -188,16 +200,22 @@ export class User extends TimeStamps {
     await this.save();
   }
 
-  /*
+  /**
    * Whether a user has enough cash to perform a supplied quantity at a certain price
+   * @param quantity of asset
+   * @param price of asset
+   * @returns whether the cashbalance is greater than or equal to the total
    */
   public hasEnoughBalance(quantity: number, price: number): boolean {
     const total = quantity * price;
-    return total < this.cashBalance;
+    return total <= this.cashBalance;
   }
 
   /**
-      Whether a user has a pending order on that side for the asset represented by the productIdentifier
+   * Whether a user has a pending order on that side for the asset represented by the productIdentifier
+   * @param productIdentifier asset to check if pending order exists
+   * @param side order side
+   * @returns true if has pending order on other side, false if not
    */
   public async hasPendingOrderOnOtherSide(
     productIdentifier: string,

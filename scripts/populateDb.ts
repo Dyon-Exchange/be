@@ -3,15 +3,16 @@ import Asset from "../src/models/Asset";
 import Token from "../src/models/Token";
 import config from "../src/config";
 import orderbook from "../src/services/orderbook";
-import database from "../src/services/database";
-import LimitOrder from "../src/models/LimitOrder";
+import database, { dropDatabase } from "../src/services/database";
+
+const x = 100000;
 
 async function AddUsers() {
   const password = "password";
   await User.create({
     email: "conor@labrys.io",
     password,
-    cashBalance: 2500,
+    cashBalance: x,
     firstName: "Conor",
     lastName: "Brosnan",
     assets: [],
@@ -20,7 +21,7 @@ async function AddUsers() {
   await User.create({
     email: "matilda@labrys.io",
     password,
-    cashBalance: 2500,
+    cashBalance: x,
     firstName: "Matilda",
     lastName: "K",
     assets: [],
@@ -29,7 +30,7 @@ async function AddUsers() {
   await User.create({
     email: "jeremy@dyon.com",
     password,
-    cashBalance: 2500,
+    cashBalance: x,
     firstName: "Jeremy",
     lastName: "Howard",
     assets: [],
@@ -38,7 +39,7 @@ async function AddUsers() {
   await User.create({
     email: "alice@dyon.com",
     password,
-    cashBalance: 2500,
+    cashBalance: x,
     firstName: "Alice",
     lastName: "Smith",
     assets: [],
@@ -47,7 +48,7 @@ async function AddUsers() {
   await User.create({
     email: "bob@dyon.com",
     password,
-    cashBalance: 2500,
+    cashBalance: x,
     firstName: "Bob",
     lastName: "Smith",
     assets: [],
@@ -69,13 +70,13 @@ type CreateAsset = {
 
 async function CreateAssetAndToken(a: CreateAsset) {
   let txHash = "my-tx-hash";
-  const response = await Contract.mint(
-    BigNumber.from(`${a.productCode}${a.caseId}${a.locationId}${a.taxCode}`),
-    a.supply
-  );
+  // const response = await Contract.mint(
+  //   BigNumber.from(`${a.productCode}${a.caseId}${a.locationId}${a.taxCode}`),
+  //   a.supply
+  // );
 
-  await response.wait();
-  txHash = response.hash;
+  // await response.wait();
+  // txHash = response.hash;
 
   const asset = await Asset.create({
     productIdentifier: a.productCode,
@@ -210,7 +211,7 @@ async function AddAssetTest() {
       "https://storage.googleapis.com/dyon/product-images/101231620010600710.png",
     blurb:
       "Jim Beam is an American brand of bourbon whiskey produced in Clermont, Kentucky, by Beam Suntory. It is one of the best-selling brands of bourbon in the world. Since 1795 (interrupted by Prohibition), seven generations of the Beam family have been involved in whiskey production for the company that produces the brand. The brand name became 'Jim Beam' in 1943 in honor of James B. Beam, who rebuilt the business after Prohibition ended. Previously produced by the Beam family and later owned by the Fortune Brands holding company, the brand was purchased by Suntory Holdings in 2014.",
-    supply: 10,
+    supply: 15,
   });
 
   await CreateAssetAndToken({
@@ -221,7 +222,7 @@ async function AddAssetTest() {
     conditionCode: "001",
     name: "Kraken",
     year: "2020",
-    supply: 10,
+    supply: 15,
     blurb:
       "Kraken Black Spiced Rum is a Caribbean black spiced rum. It is distributed in the United States by Proximo Spirits, and named after the kraken, a mythical giant squid-like sea monster. However, the bottle has a rendering of the actual giant squid with a reference to its scientific name, Architeuthis Dux.",
     image:
@@ -236,7 +237,7 @@ async function AddAssetTest() {
     conditionCode: "001",
     name: "Bundaberg",
     year: "2020",
-    supply: 10,
+    supply: 15,
     blurb:
       "Bundaberg Rum is a dark rum produced in Bundaberg, Queensland, Australia, by the Bundaberg Distilling Company. It is often referred to as 'Bundy'. In 2010, the Bundaberg Distilling Company was inducted into the Queensland Business Leaders Hall of Fame.",
     image:
@@ -251,7 +252,7 @@ async function AddAssetTest() {
     conditionCode: "001",
     name: "Wild Turkey",
     year: "2020",
-    supply: 10,
+    supply: 15,
     image:
       "https://storage.googleapis.com/dyon/product-images/101242520010600750.png",
     blurb:
@@ -266,7 +267,7 @@ async function AddAssetTest() {
     conditionCode: "001",
     name: "Sailor Jerry",
     year: "2020",
-    supply: 10,
+    supply: 15,
     image:
       "https://storage.googleapis.com/dyon/product-images/101231620010617710.png",
     blurb:
@@ -281,14 +282,13 @@ async function AddAssetTest() {
     taxCode: "001",
     conditionCode: "001",
     name: "Jameson",
-    supply: 10,
+    supply: 15,
     image:
       "https://storage.googleapis.com/dyon/product-images/101242527210600750.png",
     blurb:
       "Jameson is a blended Irish whiskey produced by the Irish Distillers subsidiary of Pernod Ricard. Originally one of the six main Dublin Whiskeys at the Jameson Distillery Bow St., Jameson is now distilled at the New Midleton Distillery in County Cork. It is by far the best-selling Irish whiskey in the world; in 2019, annual sales passed 8 million cases. It has been sold internationally since the early 19th century, and is available to buy in over 130 countries.",
   });
 }
-
 (async () => {
   //process.env.NODE_ENV = "test";
   //config.mongoConnectionUrl = "mongodb://127.0.0.1:27017/dyon";
@@ -301,15 +301,15 @@ async function GiveUsersAssets() {
   const assets = await Asset.find({});
   const users = await User.find({});
 
-  for (let i = 0; i < 3; i++) {
-    const user = users[i];
-    await user.addAsset(assets[i].productIdentifier, 5);
-    await user.save();
-  }
+  // for (let i = 0; i < 3; i++) {
+  //   const user = users[i];
+  //   await user.addAsset(assets[i].productIdentifier, 5);
+  //   await user.save();
+  // }
 
   for await (const user of users) {
     for await (const asset of assets) {
-      await user.addAsset(asset.productIdentifier, 1);
+      await user.addAsset(asset.productIdentifier, 3);
     }
     await user.save();
   }
@@ -322,7 +322,7 @@ function getRand(min: number, max: number): number {
 async function AddBidOrders(): Promise<void> {
   const users = await User.find({});
 
-  for await (const user of users) {
+  for await (const user of users.slice(0, 4)) {
     for await (const asset of user.assets) {
       await orderbook.AddLimitOrder(
         asset.productIdentifier,
@@ -339,7 +339,7 @@ async function AddBidOrders(): Promise<void> {
 async function AddAskOrders(): Promise<void> {
   const users = await User.find({});
 
-  for await (const user of users) {
+  for await (const user of users.slice(4, users.length)) {
     for await (const asset of user.assets) {
       await orderbook.AddLimitOrder(
         asset.productIdentifier,
@@ -390,6 +390,13 @@ async function AddCurrentPriceHistoryData(): Promise<void> {
 }
 
 async function main() {
+  try {
+    await dropDatabase();
+  } catch (E) {
+    console.log(E);
+  }
+
+  await orderbook.Reset();
   await AddUsers();
   if (process.argv[2] === "prod") {
     await AddAssetProd();

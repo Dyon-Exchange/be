@@ -42,7 +42,8 @@ export async function createOrder(
     matched: [],
     price,
     userId,
-    filledPrice: 0,
+    filledPriceTotal: 0,
+    filledPriceAverage: 0,
   });
 }
 
@@ -673,7 +674,7 @@ test("Market price bid order. No liquidity.", async () => {
   expect(res.body.order.status).toBe("CANNOT-FILL");
 });
 
-test.only("Test order fill price is correct, both orders completes", async () => {
+test("Test order fill price is correct, both orders completes", async () => {
   const [token, token2] = await getLoginToken();
   const productIdentifier = "771234699991211111";
   let [user, user2] = await getUsers();
@@ -692,11 +693,11 @@ test.only("Test order fill price is correct, both orders completes", async () =>
     userId: user2._id,
     side: "BID",
   });
-  expect(order1.filledPrice).toBe(100);
-  expect(order2.filledPrice).toBe(100);
+  expect(order1.filledPriceTotal).toBe(100);
+  expect(order2.filledPriceTotal).toBe(100);
 });
 
-test.only("Test order fill price is correct, sell order partially completes", async () => {
+test("Test order fill price is correct, sell order partially completes", async () => {
   const [token, token2] = await getLoginToken();
   const productIdentifier = "771234699991211123";
   const [user, user2] = await getUsers();
@@ -716,11 +717,11 @@ test.only("Test order fill price is correct, sell order partially completes", as
     side: "BID",
   });
 
-  expect(order1.filledPrice).toBe(100);
-  expect(order2.filledPrice).toBe(100);
+  expect(order1.filledPriceTotal).toBe(100);
+  expect(order2.filledPriceTotal).toBe(100);
 });
 
-test.only("Test order fill price is correct, buy order partial completes", async () => {
+test("Test order fill price is correct, buy order partial completes", async () => {
   const [token, token2] = await getLoginToken();
   const productIdentifier = "771234699991218900";
   const [user, user2] = await getUsers();
@@ -740,6 +741,6 @@ test.only("Test order fill price is correct, buy order partial completes", async
     side: "BID",
   });
 
-  expect(order1.filledPrice).toBe(200);
-  expect(order2.filledPrice).toBe(200);
+  expect(order1.filledPriceTotal).toBe(200);
+  expect(order2.filledPriceTotal).toBe(200);
 });

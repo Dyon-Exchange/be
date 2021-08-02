@@ -12,7 +12,7 @@ export class AssetPriceEvent extends TimeStamps {
   time!: Date;
 
   /*
-   * Get the date for this price event in a human friendly string
+   * @returns Get the date for this price event in a human friendly string
    */
   public date(): string {
     return this.time.toLocaleDateString("en", {

@@ -1,9 +1,16 @@
-import { modelOptions, prop } from "@typegoose/typegoose";
+import { modelOptions, prop, pre } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
 export type OrderSide = "BID" | "ASK";
 export type OrderStatus = "PENDING" | "COMPLETE" | "CANCELED" | "CANNOT-FILL";
 
+@pre<Order>("save", function () {
+  if (this.isModified("weightedPriceAverages")) {
+    this.filledPriceAverage =
+      this.weightedPriceAverages.reduce((p, c) => p + c, 0) /
+      this.weightedPriceAverages.length;
+  }
+})
 @modelOptions({
   schemaOptions: {
     toJSON: { virtuals: true },
@@ -36,7 +43,13 @@ export default abstract class Order extends TimeStamps {
   price!: number;
 
   @prop({ required: true })
-  filledPrice!: number;
+  filledPriceTotal!: number;
+
+  @prop({ required: true })
+  filledPriceAverage!: number;
+
+  @prop({ required: true })
+  weightedPriceAverages!: number[];
 
   matched!: string[];
 }

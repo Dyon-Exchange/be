@@ -8,7 +8,7 @@ import Tasks from "./tasks";
 
 const router = new Router<DefaultState, Context>();
 const index = async (ctx: Context) => {
-  ctx.body = "Welcome to the WineBit";
+  ctx.body = "Welcome to the Dyon";
 };
 
 router.get("/", index);
