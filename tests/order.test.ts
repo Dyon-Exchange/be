@@ -44,6 +44,7 @@ export async function createOrder(
     userId,
     filledPriceTotal: 0,
     filledPriceAverage: 0,
+    weightedPriceAverages: [],
   });
 }
 
@@ -651,27 +652,19 @@ test("Market price bid order. Order filled", async () => {
 });
 
 test("Market price ask order. No liquidity.", async () => {
-  const [token, token2] = await getLoginToken();
-
+  const [token] = await getLoginToken();
   const productIdentifier = "796127361273612736";
-  let [user, user2] = await getUsers();
-  const initUser = user.cashBalance;
-  const initUser2 = user2.cashBalance;
 
   const res = await sendMarketOrder(productIdentifier, "ASK", 1, token);
-  console.log(res.body);
-  expect(res.body.order.status).toBe("CANNOT-FILL");
+  expect(res.body.status).toBe("CANNOT-FILL");
 });
 
 test("Market price bid order. No liquidity.", async () => {
-  const [token, token2] = await getLoginToken();
+  const [token] = await getLoginToken();
   const productIdentifier = "796127361273612736";
-  let [user, user2] = await getUsers();
-  const initUser = user.cashBalance;
-  const initUser2 = user2.cashBalance;
 
   const res = await sendMarketOrder(productIdentifier, "BID", 1, token);
-  expect(res.body.order.status).toBe("CANNOT-FILL");
+  expect(res.body.status).toBe("CANNOT-FILL");
 });
 
 test("Test order fill price is correct, both orders completes", async () => {
@@ -743,4 +736,151 @@ test("Test order fill price is correct, buy order partial completes", async () =
 
   expect(order1.filledPriceTotal).toBe(200);
   expect(order2.filledPriceTotal).toBe(200);
+});
+
+test("Test order average price. Each Order matches with one", async () => {
+  const [token, token2] = await getLoginToken();
+  const productIdentifier = "771234230920211100";
+  const [user, user2] = await getUsers();
+
+  await sendLimitOrder(productIdentifier, "ASK", 1, 200, token);
+  await sendLimitOrder(productIdentifier, "BID", 1, 250, token2);
+
+  const [order1] = await Order.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+  });
+
+  const [order2] = await Order.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+  });
+
+  expect(order1.filledPriceAverage).toBe(200);
+  expect(order2.filledPriceAverage).toBe(200);
+});
+
+test("Test order average price. Buy order matches with 2 sell orders", async () => {
+  const productIdentifier = "771234230920212100";
+  const [token, token2] = await getLoginToken();
+  const [user, user2] = await getUsers();
+
+  await sendLimitOrder(productIdentifier, "ASK", 1, 200, token);
+  await sendLimitOrder(productIdentifier, "ASK", 1, 250, token);
+
+  await sendLimitOrder(productIdentifier, "BID", 2, 250, token2);
+
+  const [order1] = await Order.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+    price: 200,
+  });
+
+  const [order2] = await Order.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+    price: 250,
+  });
+
+  const [order3] = await Order.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+    price: 250,
+  });
+
+  expect(order1.filledPriceAverage).toBe(200);
+  expect(order2.filledPriceAverage).toBe(250);
+  expect(order3.filledPriceAverage).toBe(225);
+});
+
+test("Test order average price. Sell order matches 2 buy orders", async () => {
+  const productIdentifier = "111234231920208888";
+  const [token, token2] = await getLoginToken();
+  const [user, user2] = await getUsers();
+
+  await sendLimitOrder(productIdentifier, "ASK", 2, 200, token);
+  await sendLimitOrder(productIdentifier, "BID", 1, 250, token2);
+  await sendLimitOrder(productIdentifier, "BID", 1, 300, token2);
+
+  const [order1] = await Order.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+    price: 200,
+  });
+
+  const [order2] = await Order.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+    price: 250,
+  });
+
+  const [order3] = await Order.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+    price: 300,
+  });
+
+  expect(order1.filledPriceAverage).toBe(200);
+  expect(order2.filledPriceAverage).toBe(200);
+  expect(order3.filledPriceAverage).toBe(200);
+});
+
+test("Test order average price. Buy order partially matches sell order.", async () => {
+  const productIdentifier = "721234230920212100";
+  const [token, token2] = await getLoginToken();
+  const [user, user2] = await getUsers();
+
+  await sendLimitOrder(productIdentifier, "BID", 2, 200, token2);
+  await sendLimitOrder(productIdentifier, "ASK", 0.5, 150, token);
+
+  const [order1] = await Order.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+    price: 200,
+  });
+
+  const [order2] = await Order.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+    price: 150,
+  });
+
+  expect(order1.filledPriceAverage).toBe(200);
+  expect(order2.filledPriceAverage).toBe(200);
+});
+
+test("Test order average price. Sell order partially matches buy order.", async () => {
+  const productIdentifier = "721114230920212100";
+  const [token, token2] = await getLoginToken();
+  const [user, user2] = await getUsers();
+
+  await sendLimitOrder(productIdentifier, "ASK", 2, 150, token);
+  await sendLimitOrder(productIdentifier, "BID", 0.5, 200, token2);
+
+  const [order1] = await Order.find({
+    productIdentifier,
+    userId: user._id,
+    side: "ASK",
+    price: 150,
+  });
+
+  const [order2] = await Order.find({
+    productIdentifier,
+    userId: user2._id,
+    side: "BID",
+    price: 200,
+  });
+
+  expect(order1.filledPriceAverage).toBe(150);
+  expect(order2.filledPriceAverage).toBe(150);
 });
