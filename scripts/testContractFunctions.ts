@@ -5,7 +5,8 @@ import Asset, { Asset as AssetType } from "../src/models/Asset";
 import Token, { Token as TokenType } from "../src/models/Token";
 
 async function mint() {
-  const response = await Contract.mint(BigNumber.from("2"), 100, {
+  const contract = await Contract();
+  const response = await contract.mint(BigNumber.from("2"), 100, {
     gasLimit: 12487794,
   });
   await response.wait();
@@ -13,14 +14,15 @@ async function mint() {
 }
 
 async function main() {
+  const contract = await Contract();
   const token = (await Token.find())[0];
   console.log(
     (
-      await Contract.balanceOf(Wallet.address, BigNumber.from(token.tokenId))
+      await contract.balanceOf(Wallet.address, BigNumber.from(token.tokenId))
     ).toNumber()
   );
 
-  const response = await Contract.burn(
+  const response = await contract.burn(
     Wallet.address,
     BigNumber.from(token.tokenId),
     1,
@@ -35,7 +37,7 @@ async function main() {
 
   console.log(
     (
-      await Contract.balanceOf(Wallet.address, BigNumber.from(token.tokenId))
+      await contract.balanceOf(Wallet.address, BigNumber.from(token.tokenId))
     ).toNumber()
   );
 }

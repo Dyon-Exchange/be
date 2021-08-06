@@ -44,7 +44,7 @@ export default async function AddMarketOrder(
     status: "PENDING",
     filled: 0,
     matched: [],
-    price: Number(price),
+    price: price ? Number(price) : 0,
     filledPriceTotal: 0,
     filledPriceAverage: 0,
     weightedPriceAverages: [],
@@ -61,6 +61,8 @@ export default async function AddMarketOrder(
   });
   const data: AddMarketOrderResponse = response.data;
 
+  console.log({ data });
+
   let priceTotal = 0; // how much the user that initiated the order has spent.
 
   if (data.Done) {
@@ -76,6 +78,8 @@ export default async function AddMarketOrder(
     await processPartialOrder(data.Partial, partialQuantity, true);
   }
 
+  newOrder.filledPriceTotal = priceTotal;
+
   if (data.QuantityLeft < newOrder.quantity) {
     const filled = newOrder.quantity - data.QuantityLeft;
     await user.updateAssetQuantityFromOrder(newOrder, filled);
@@ -85,10 +89,9 @@ export default async function AddMarketOrder(
     );
     newOrder.filled = filled;
     newOrder.status = "COMPLETE";
-    await newOrder.save();
   } else {
     newOrder.status = "CANNOT-FILL";
-    await newOrder.save();
   }
+  await newOrder.save();
   return newOrder;
 }

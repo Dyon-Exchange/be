@@ -54,8 +54,12 @@ export async function processPartialOrder(
 
   // Add weighted fill price to the matched order's weightedAverages array
   if (weightedAverages) {
-    weightedAverages.push(filled * order.price);
+    weightedAverages.push(Math.ceil(filled) * order.price);
+    order.weightedPriceAverages = order.weightedPriceAverages.concat(
+      Math.ceil(filled) * order.price
+    );
   }
+
   await order.save();
   await user.updateAssetQuantityFromOrder(order, filled);
   if (updateCashBalance) {
@@ -80,9 +84,15 @@ export async function processDoneOrder(
   order.filled = order.quantity;
   order.filledPriceTotal =
     order.filledPriceTotal + (order.quantity - filled) * order.price;
+
+  // If we get weight averages array this must not be the user's order, so we have to update this order's weighted averages and add it to the array for calculating the user's weighted averages also
   if (weightedAverages) {
-    weightedAverages.push(filled * order.price);
+    weightedAverages.push(Math.ceil(order.quantity - filled) * order.price);
+    order.weightedPriceAverages = order.weightedPriceAverages.concat(
+      Math.ceil(order.quantity - filled) * order.price
+    );
   }
+
   await order.save();
   await user.updateAssetQuantityFromOrder(order, order.quantity - filled);
   if (updateCashBalance) {

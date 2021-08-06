@@ -605,6 +605,108 @@ export async function setupAssets() {
     changePercentage: "",
   });
 
+  const asset25 = await Asset.create({
+    year: "2020",
+    name: "Example 21",
+    productIdentifier: "771234230920211100",
+    unitSize: "jashdf",
+    details: {
+      blurb: "",
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
+    changeAmount: "",
+    changePercentage: "",
+  });
+
+  const asset26 = await Asset.create({
+    year: "2020",
+    name: "Example 21",
+    productIdentifier: "771234230920212100",
+    unitSize: "jashdf",
+    details: {
+      blurb: "",
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
+    changeAmount: "",
+    changePercentage: "",
+  });
+  const asset27 = await Asset.create({
+    year: "2020",
+    name: "Example 21",
+    productIdentifier: "111234231920208888",
+    unitSize: "jashdf",
+    details: {
+      blurb: "",
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
+    changeAmount: "",
+    changePercentage: "",
+  });
+  const asset28 = await Asset.create({
+    year: "2020",
+    name: "Example 21",
+    productIdentifier: "721234230920212100",
+    unitSize: "jashdf",
+    details: {
+      blurb: "",
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
+    changeAmount: "",
+    changePercentage: "",
+  });
+  const asset29 = await Asset.create({
+    year: "2020",
+    name: "Example 21",
+    productIdentifier: "721114230920212100",
+    unitSize: "jashdf",
+    details: {
+      blurb: "",
+      colour: "",
+      country: "",
+      region: "",
+      subRegion: "",
+      wineAdvocate: "",
+      decanter: "",
+      jamesSuckling: "",
+      jebDunnuck: "",
+      vinous: "",
+    },
+    changeAmount: "",
+    changePercentage: "",
+  });
+
   const user = await User.findOne({ email: "conor@labrys.io" });
   if (!user) {
     throw new Error();
@@ -634,6 +736,11 @@ export async function setupAssets() {
     { productIdentifier: asset22.productIdentifier, quantity: 50 },
     { productIdentifier: asset23.productIdentifier, quantity: 50 },
     { productIdentifier: asset24.productIdentifier, quantity: 50 },
+    { productIdentifier: asset25.productIdentifier, quantity: 50 },
+    { productIdentifier: asset26.productIdentifier, quantity: 50 },
+    { productIdentifier: asset27.productIdentifier, quantity: 50 },
+    { productIdentifier: asset28.productIdentifier, quantity: 50 },
+    { productIdentifier: asset29.productIdentifier, quantity: 50 },
   ];
   await user.save();
 

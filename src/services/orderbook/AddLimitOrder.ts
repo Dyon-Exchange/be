@@ -134,7 +134,12 @@ export default async function AddLimitOrder(
       await processPartialOrder(data.Partial, partialQuantity, false);
     } else {
       priceTotal += data.Partial.price * partialQuantity; // add the amount spent/received by the user on filling the partial order
-      await processPartialOrder(data.Partial, partialQuantity, true);
+      await processPartialOrder(
+        data.Partial,
+        partialQuantity,
+        true,
+        weightedPriceAverages
+      );
     }
   }
 
@@ -147,6 +152,9 @@ export default async function AddLimitOrder(
     throw new Error(`Refetching ${newOrder._id} failed`);
   }
   order.filledPriceTotal = priceTotal;
+  order.weightedPriceAverages = order.weightedPriceAverages.concat(
+    weightedPriceAverages
+  );
   await order.save();
   return order;
 }

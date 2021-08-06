@@ -1,7 +1,10 @@
 import User from "../src/models/User";
 import Asset from "../src/models/Asset";
 import Token from "../src/models/Token";
+import Config from "../src/models/Config";
 import config from "../src/config";
+import Contract from "../src/services/contracts";
+import { BigNumber } from "ethers";
 import orderbook from "../src/services/orderbook";
 import database, { dropDatabase } from "../src/services/database";
 
@@ -70,9 +73,15 @@ type CreateAsset = {
 
 async function CreateAssetAndToken(a: CreateAsset) {
   let txHash = "my-tx-hash";
-  // const response = await Contract.mint(
-  //   BigNumber.from(`${a.productCode}${a.caseId}${a.locationId}${a.taxCode}`),
-  //   a.supply
+  const contract = await Contract();
+  // const response = await contract.mint(
+  //   BigNumber.from(
+  //     `${a.productCode}${a.caseId}${a.locationId}${a.taxCode}${a.conditionCode}`
+  //   ),
+  //   a.supply,
+  //   {
+  //     gasLimit: 12487794,
+  //   }
   // );
 
   // await response.wait();
@@ -110,6 +119,8 @@ async function CreateAssetAndToken(a: CreateAsset) {
     productIdentifier: `${a.productCode}${a.locationId}${a.taxCode}${a.conditionCode}`,
     supply: a.supply,
   });
+
+  console.log({ txHash, name: a.name });
 }
 
 async function AddAssetProd() {
@@ -124,7 +135,7 @@ async function AddAssetProd() {
     image: "",
     blurb:
       "Château Latour is one of Bordeaux's – and the world's – most famous wine producers. It is situated in the southeast corner of the Pauillac commune on the border of Saint-Julien, in the Médoc region. Rated as a First Growth in the 1855 Bordeaux Classification, it has become one of the most sought-after and expensive wine producers on the planet, and produces powerfully structured Cabernet Sauvignon-dominant wines capable of lasting many decades.",
-    supply: 10,
+    supply: 15,
   });
 
   await CreateAssetAndToken({
@@ -138,7 +149,7 @@ async function AddAssetProd() {
     image: "",
     blurb:
       "Château Lafite Rothschild is a wine estate in France, owned by members of the Rothschild family since the 19th century. The name Lafite comes from the surname of the La Fite family. Lafite was one of four wine-producing châteaux of Bordeaux originally awarded First Growth status in the 1855 Classification, which was based on the prices and wine quality at that time. Since then, it has been a consistent producer of one of the world's most expensive red wines.",
-    supply: 10,
+    supply: 15,
   });
 
   await CreateAssetAndToken({
@@ -152,7 +163,7 @@ async function AddAssetProd() {
     image: "",
     blurb:
       "Domaine de la Romanée-Conti, often abbreviated to DRC, is an estate in Burgundy, France that produces white and red wine. It is widely considered among the world's greatest wine producers, and DRC bottles are among the world's most expensive. It takes its name from the domaine's most famous vineyard, Romanée-Conti.",
-    supply: 10,
+    supply: 15,
   });
 
   await CreateAssetAndToken({
@@ -166,7 +177,7 @@ async function AddAssetProd() {
     image: "",
     blurb:
       "Penfolds Grange (until the 1989 vintage labelled Penfolds Grange Hermitage) is an Australian wine, made predominantly from the Shiraz (Syrah) grape and usually a small percentage of Cabernet Sauvignon. It is widely considered one of Australia's 'first growth' and its most collectable wine.[1] The term 'Hermitage', the name of a French wine appellation, was commonly used in Australia as another synonym for Shiraz or Syrah. Penfolds is owned by Treasury Wine Estates.",
-    supply: 10,
+    supply: 15,
   });
 
   await CreateAssetAndToken({
@@ -180,7 +191,7 @@ async function AddAssetProd() {
     image: "",
     blurb:
       "Cristal is the flagship cuvée of Champagne Louis Roederer, created in 1876 for Alexander II, tsar of Russia.",
-    supply: 10,
+    supply: 15,
   });
 
   await CreateAssetAndToken({
@@ -194,7 +205,7 @@ async function AddAssetProd() {
     conditionCode: "001",
     blurb:
       "Domaine Leroy is a vineyard estate which produces red Burgundy. The domaine has always produced biodynamic wine, and is certified by ECOCERT.[1] Lalou Bize-Leroy of Domaine Leroy also owns a quarter of Domaine de la Romanée-Conti. The domaine has 23 hectares of vines, mostly Premier Cru and Grand Cru classified.",
-    supply: 10,
+    supply: 15,
   });
 }
 
@@ -389,6 +400,15 @@ async function AddCurrentPriceHistoryData(): Promise<void> {
   }
 }
 
+async function setContractAddressInDatabase() {
+  const addr = process.argv[2];
+  const config = await Config.create({
+    contractAddress: addr,
+  });
+  config.contractAddress = addr;
+  await config.save();
+}
+
 async function main() {
   try {
     await dropDatabase();
@@ -397,6 +417,8 @@ async function main() {
   }
 
   await orderbook.Reset();
+
+  await setContractAddressInDatabase();
   await AddUsers();
   if (process.argv[2] === "prod") {
     await AddAssetProd();

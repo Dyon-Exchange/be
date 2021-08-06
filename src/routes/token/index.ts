@@ -52,7 +52,8 @@ router.route({
     try {
       const tokenId = `${productCode}${caseId}${locationId}${taxCode}${conditionCode}`;
       if (process.env.NODE_ENV !== "test") {
-        const response = await Contract.mint(BigNumber.from(tokenId), supply, {
+        const contract = await Contract();
+        const response = await contract.mint(BigNumber.from(tokenId), supply, {
           gasLimit: 37411,
         });
         await response.wait();
@@ -175,30 +176,34 @@ router.route({
       txHash: string;
     }[] = [];
 
-    await Promise.all(
-      toRedeem.map(async ({ productIdentifier, units }) => {
-        console.log({ productIdentifier, units });
+    const errors = [];
 
-        const asset = await Asset.findOne({ productIdentifier });
-        if (!asset) {
-          ctx.throw(400, `Asset ${productIdentifier} does not exist`);
-        }
-        const token = await Token.findOne({ productCode: productIdentifier });
-        if (!token) {
-          ctx.throw(400, `Token ${productIdentifier} does not exist`);
-        }
+    for (const item of toRedeem) {
+      const { productIdentifier, units } = item;
 
-        if (token.supply < units) {
-          ctx.throw(400, `Cannot burn more tokens than exists`);
-        }
+      const asset = await Asset.findOne({ productIdentifier });
+      if (!asset) {
+        ctx.throw(400, `Asset ${productIdentifier} does not exist`);
+      }
+      const token = await Token.findOne({ productCode: productIdentifier });
+      if (!token) {
+        ctx.throw(400, `Token ${productIdentifier} does not exist`);
+      }
 
-        if (user.getAssetQuantity(productIdentifier) < units) {
-          ctx.throw(
-            401,
-            `You do not have enough of ${productIdentifier} to redeem this amount of tokens`
-          );
-        }
-        const response = await Contract.burn(
+      if (token.supply < units) {
+        ctx.throw(400, `Cannot burn more tokens than exists`);
+      }
+
+      if (user.getAssetQuantity(productIdentifier) < units) {
+        ctx.throw(
+          401,
+          `You do not have enough of ${productIdentifier} to redeem this amount of tokens`
+        );
+      }
+
+      try {
+        const contract = await Contract();
+        const response = await contract.burn(
           Wallet.address,
           BigNumber.from(token.tokenId),
           units,
@@ -220,8 +225,10 @@ router.route({
 
         token.supply = token.supply - units;
         await token.save();
-      })
-    );
+      } catch (e) {
+        errors.push(asset.name);
+      }
+    }
 
     ctx.response.status = 200;
     ctx.response.body = { redeemed };

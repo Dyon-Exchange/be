@@ -232,8 +232,6 @@ export class User extends TimeStamps {
       userId: this._id,
       status: "PENDING",
     });
-    console.log({ orders });
-    console.log(orders.length > 0);
     return orders.length > 0;
   }
 }
