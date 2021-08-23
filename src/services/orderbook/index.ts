@@ -7,10 +7,10 @@ import UpdateMarketPrices from "./UpdateMarketPrices";
 import { httpClient, OrderBookOrder } from "./common";
 
 // Represents the response returned from a getOrders request to the orderbook
-export interface GetOrdersResponse {
+type GetOrdersResponse = {
   buy: OrderBookOrder[];
   sell: OrderBookOrder[];
-}
+};
 
 export default {
   AddAsset,
@@ -35,17 +35,9 @@ export default {
    * @returns buy and sell arrays of the orders
    */
   GetOrders: async (productIdentifier: string): Promise<GetOrdersResponse> => {
-    let res;
-    try {
-      res = await httpClient.get(`/getOrders?prodId=${productIdentifier}`);
-    } catch (err) {
-      console.error(err.message);
-      throw new Error("orderbook server error - check prodidentifier");
-    }
-
-    const Asset = res.data;
-
-    if (!Asset) {
+    const { data } = await httpClient.get("/getOrders");
+    const { Assets } = data;
+    if (!Assets[productIdentifier]) {
       return {
         buy: [],
         sell: [],
@@ -53,13 +45,13 @@ export default {
     }
 
     let buy: OrderBookOrder[] = [];
-    Object.keys(Asset.bids.prices).forEach((price) => {
-      buy = buy.concat(Asset.bids.prices[price].orders);
+    Object.keys(Assets[productIdentifier].bids.prices).forEach((price) => {
+      buy = buy.concat(Assets[productIdentifier].bids.prices[price].orders);
     });
 
     let sell: OrderBookOrder[] = [];
-    Object.keys(Asset.asks.prices).forEach((price) => {
-      sell = sell.concat(Asset.asks.prices[price].orders);
+    Object.keys(Assets[productIdentifier].asks.prices).forEach((price) => {
+      sell = sell.concat(Assets[productIdentifier].asks.prices[price].orders);
     });
 
     return { sell, buy };
