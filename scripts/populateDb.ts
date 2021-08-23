@@ -4,16 +4,23 @@ import Token from "../src/models/Token";
 import Config from "../src/models/Config";
 import config from "../src/config";
 import Contract from "../src/services/contracts";
-import { BigNumber } from "ethers";
 import orderbook from "../src/services/orderbook";
-import database, { dropDatabase } from "../src/services/database";
+import Mongoose from "mongoose";
+
+async function dropDatabase(): Promise<void> {
+  await Mongoose.connect(config.mongoConnectionUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  await Mongoose.connection.db.dropDatabase();
+}
 
 const x = 100000;
 
 async function AddUsers() {
   const password = "password";
   await User.create({
-    email: "conor@labrys.io",
+    email: "joel@dyon.cc",
     password,
     cashBalance: x,
     firstName: "Conor",
@@ -22,7 +29,7 @@ async function AddUsers() {
   });
 
   await User.create({
-    email: "matilda@labrys.io",
+    email: "maria@dyon.cc",
     password,
     cashBalance: x,
     firstName: "Matilda",
@@ -31,7 +38,7 @@ async function AddUsers() {
   });
 
   await User.create({
-    email: "jeremy@dyon.com",
+    email: "jeremy@dyon.cc",
     password,
     cashBalance: x,
     firstName: "Jeremy",
@@ -40,7 +47,7 @@ async function AddUsers() {
   });
 
   await User.create({
-    email: "alice@dyon.com",
+    email: "alice@dyon.cc",
     password,
     cashBalance: x,
     firstName: "Alice",
@@ -49,11 +56,20 @@ async function AddUsers() {
   });
 
   await User.create({
-    email: "bob@dyon.com",
+    email: "bob@dyon.cc",
     password,
     cashBalance: x,
     firstName: "Bob",
     lastName: "Smith",
+    assets: [],
+  });
+
+  await User.create({
+    email: "JQ@dyon.cc",
+    password,
+    cashBalance: x,
+    firstName: "J",
+    lastName: "Q",
     assets: [],
   });
 }
@@ -300,12 +316,6 @@ async function AddAssetTest() {
       "Jameson is a blended Irish whiskey produced by the Irish Distillers subsidiary of Pernod Ricard. Originally one of the six main Dublin Whiskeys at the Jameson Distillery Bow St., Jameson is now distilled at the New Midleton Distillery in County Cork. It is by far the best-selling Irish whiskey in the world; in 2019, annual sales passed 8 million cases. It has been sold internationally since the early 19th century, and is available to buy in over 130 countries.",
   });
 }
-(async () => {
-  //process.env.NODE_ENV = "test";
-  //config.mongoConnectionUrl = "mongodb://127.0.0.1:27017/dyon";
-
-  await database();
-})();
 
 // Give the first 3 users 5 of their respective indexed asset, then give each user 1 of each asset
 async function GiveUsersAssets() {
@@ -331,6 +341,7 @@ function getRand(min: number, max: number): number {
 }
 // Each user will submit a bid order for 3 of each asset at different prices (between 5-30$) so that users are able to test selling and market prices will be filled
 async function AddBidOrders(): Promise<void> {
+  console.log("adding bid orders");
   const users = await User.find({});
 
   for await (const user of users.slice(0, 4)) {
@@ -348,6 +359,7 @@ async function AddBidOrders(): Promise<void> {
 
 // Each user will submit an ask order for 1 of each asset a different price beteween 20-30, this is to ensure that none of the BID orders get filled.
 async function AddAskOrders(): Promise<void> {
+  console.log("adding ask orders");
   const users = await User.find({});
 
   for await (const user of users.slice(4, users.length)) {
@@ -376,6 +388,7 @@ function getTimes() {
 }
 
 async function AddPriceHistoryData(): Promise<void> {
+  console.log("adding price history data");
   const assets = await Asset.find({});
   const times = getTimes();
   for await (const asset of assets) {
@@ -386,6 +399,7 @@ async function AddPriceHistoryData(): Promise<void> {
 }
 
 async function AddCurrentPriceHistoryData(): Promise<void> {
+  console.log("adding current price history data");
   const assets = await Asset.find({});
   const now = new Date();
 
