@@ -52,43 +52,43 @@ app.use(index.routes()).use(index.allowedMethods());
 
 // Every 1 minute
 cron
-  .schedule("* * * * *", async () => {
+  .schedule("*/10 * * * *", async () => {
     await Orderbook.UpdateMarketPrices();
   })
   .start();
 
-// Every day at 1am
-cron
-  .schedule("0 3 * * *", async () => {
-    const assets = await Asset.find({});
-    for await (const asset of assets) {
-      if (asset.askMarketPrice) {
-        asset.addPriceEvent(asset.askMarketPrice, new Date());
-      }
+// // Every day at 1am
+// cron
+//   .schedule("0 3 * * *", async () => {
+//     const assets = await Asset.find({});
+//     for await (const asset of assets) {
+//       if (asset.askMarketPrice) {
+//         asset.addPriceEvent(asset.askMarketPrice, new Date());
+//       }
 
-      const changePercentage = getRand(-15, 15);
+//       const changePercentage = getRand(-15, 15);
 
-      let changeAmount = 0;
-      if (changePercentage > 0) {
-        if (asset.bidMarketPrice) {
-          changeAmount =
-            (Math.abs(changePercentage) / asset.bidMarketPrice) * 100;
-        } else {
-          changeAmount = getRand(1000, 2000);
-        }
-      } else {
-        if (asset.bidMarketPrice) {
-          changeAmount =
-            (Math.abs(changePercentage) / asset.bidMarketPrice) * 100;
-        } else {
-          changeAmount = getRand(-1000, -2000);
-        }
-      }
-      asset.changeAmount = changeAmount;
-      asset.changePercentage = changePercentage;
-      await asset.save();
-    }
-  })
-  .start();
+//       let changeAmount = 0;
+//       if (changePercentage > 0) {
+//         if (asset.bidMarketPrice) {
+//           changeAmount =
+//             (Math.abs(changePercentage) / asset.bidMarketPrice) * 100;
+//         } else {
+//           changeAmount = getRand(1000, 2000);
+//         }
+//       } else {
+//         if (asset.bidMarketPrice) {
+//           changeAmount =
+//             (Math.abs(changePercentage) / asset.bidMarketPrice) * 100;
+//         } else {
+//           changeAmount = getRand(-1000, -2000);
+//         }
+//       }
+//       asset.changeAmount = changeAmount;
+//       asset.changePercentage = changePercentage;
+//       await asset.save();
+//     }
+//   })
+//   .start();
 
 export default app;

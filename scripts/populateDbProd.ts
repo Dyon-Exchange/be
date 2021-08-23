@@ -29,7 +29,7 @@ async function AddUsers() {
   });
 
   await User.create({
-    email: "jeremy@dyon.com",
+    email: "jeremy@dyon.comm",
     password,
     cashBalance: 100000,
     firstName: "Jeremy",
@@ -38,7 +38,7 @@ async function AddUsers() {
   });
 
   await User.create({
-    email: "alice@dyon.com",
+    email: "alic@dyon.comom",
     password,
     cashBalance: 100000,
     firstName: "Alice",
@@ -47,7 +47,7 @@ async function AddUsers() {
   });
 
   await User.create({
-    email: "bob@dyon.com",
+    email: "b@dyon.comcom",
     password,
     cashBalance: 100000,
     firstName: "Bob",

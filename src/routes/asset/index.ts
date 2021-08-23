@@ -4,7 +4,7 @@ import multer from "@koa/multer";
 import { DocumentType } from "@typegoose/typegoose";
 import Asset, { Asset as AssetClass } from "../../models/Asset";
 import AssetPriceEvent from "../../models/AssetPriceEvent";
-
+import { debugLog } from "../../helpers/debugLog";
 import { authRequired } from "../../services/passport";
 
 const upload = multer();
@@ -23,21 +23,41 @@ export function getRand(min: number, max: number): number {
   return Number(num.toFixed(2));
 }
 
-/*
- * Get data about all assets
+/**
+ * Get data for all assets
+ * Paginated data
  */
 router.route({
   method: "GET",
   path: "/",
+  validate: {
+    query: {
+      limit: Joi.number().required(),
+      start: Joi.number().required(),
+    },
+  },
   handler: async (ctx: Context) => {
-    const assets = await Asset.find({});
+    debugLog("hitting endpoint");
+
+    const limit = ctx.request.query.limit as any;
+    const start = (ctx.request.query.start as any) ?? 0;
+
+    debugLog("ok lets see");
+    debugLog(limit);
+    debugLog(start);
+
+    const assets = await Asset.find({}).limit(limit).skip(start);
+
+    const total = await Asset.find({}).countDocuments();
+
+    console.log("got stuff from db");
+
     const marketAssets: any[] = []; // eslint-disable-line
 
     await Promise.all(
       assets.map(async (asset: DocumentType<AssetClass>) => {
         marketAssets.push({
-          buy: await asset.getBestBuyPrice(),
-          sell: await asset.getBestSellPrice(),
+          lastPriceAction: await asset.getMostRecentMarketPrice(),
           volume: await asset.getTradingVolume(),
           marketCap: await asset.getMarketCap(),
           ...asset.toObject(),
@@ -47,7 +67,37 @@ router.route({
 
     ctx.body = {
       assets: marketAssets,
+      total,
+      limit,
+      start,
+      nextStart: start + limit,
     };
+  },
+});
+
+/*
+ * Retrieve all assets containing the product identifiers supplied in the array included in the request body
+ */
+router.route({
+  method: "POST",
+  path: "/get-many",
+  validate: {
+    body: {
+      prodIds: Joi.array(),
+    },
+    type: "json",
+  },
+  handler: async (ctx: Context) => {
+    const { prodIds }: { prodIds: Array<string> } = ctx.request.body;
+    // const qryLength = prodIds.length;
+
+    const assets = await Asset.find({
+      productIdentifier: { $in: [...prodIds] },
+    });
+
+    // validate
+
+    ctx.body = { assets };
   },
 });
 
