@@ -140,6 +140,24 @@ export class Asset extends TimeStamps {
     return limitOrder.price;
   }
 
+  /**
+   * Searches price events for most recent price update on asset
+   * @returns a number representing the most recent price
+   */
+  public async getMostRecentMarketPrice(): Promise<number | undefined> {
+    const [priceEvent] = await AssetPriceEvent.find({
+      productIdentifier: this.productIdentifier,
+    })
+      .sort({ dateCreated: 1 })
+      .limit(1);
+
+    if (!priceEvent) {
+      return undefined;
+    }
+
+    return priceEvent.price;
+  }
+
   /*
    * @returns Get the best sell price for this asset
    */

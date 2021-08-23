@@ -57,8 +57,7 @@ router.route({
     await Promise.all(
       assets.map(async (asset: DocumentType<AssetClass>) => {
         marketAssets.push({
-          buy: await asset.getBestBuyPrice(),
-          sell: await asset.getBestSellPrice(),
+          lastPriceAction: await asset.getMostRecentMarketPrice(),
           volume: await asset.getTradingVolume(),
           marketCap: await asset.getMarketCap(),
           ...asset.toObject(),
