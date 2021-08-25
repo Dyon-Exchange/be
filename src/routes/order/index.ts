@@ -1,9 +1,10 @@
 import { Context } from "koa";
 import Router from "koa-joi-router";
-import orderbook from "../../services/orderbook";
+import orderbook, { GetOrdersResponse } from "../../services/orderbook";
 import LimitOrder from "../../models/LimitOrder";
 import MarketOrder from "../../models/MarketOrder";
 import { authRequired } from "../../services/passport";
+import { debugLog } from "../../helpers/debugLog";
 
 const { Joi } = Router;
 
@@ -153,7 +154,13 @@ router.route({
 
 router.get("/orderbook/:productIdentifier", async (ctx: Context) => {
   const { productIdentifier } = ctx.params;
-  const orders = await orderbook.GetOrders(productIdentifier);
+  debugLog(productIdentifier);
+  let orders: GetOrdersResponse;
+  try {
+    orders = await orderbook.GetOrders(productIdentifier);
+  } catch (err) {
+    ctx.throw(400, err.message);
+  }
   ctx.response.body = orders;
   ctx.response.status = 200;
 });

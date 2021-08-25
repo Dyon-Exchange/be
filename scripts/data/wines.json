@@ -1,0 +1,826 @@
+[
+    {
+      "LWIN": "101403320150600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Petrus",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 51,280"
+    },
+    {
+      "LWIN": "101403320090600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Petrus",
+      "Vintage": 2009,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 49,689"
+    },
+    {
+      "LWIN": "101010720200600750",
+      "Region": "Bordeaux",
+      "Wine Name": "La Fleur Petrus",
+      "Vintage": 2020,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,869"
+    },
+    {
+      "LWIN": "101190220180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Lafleur",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 19,949"
+    },
+    {
+      "LWIN": "101419220100600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Le Pin",
+      "Vintage": 2010,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 46,806"
+    },
+    {
+      "LWIN": "101608220160600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Vieux Chateau Certan",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,656"
+    },
+    {
+      "LWIN": "101595520180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Trotanoy",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,617"
+    },
+    {
+      "LWIN": "100874620180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "La Conseillante",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,726"
+    },
+    {
+      "LWIN": "100620520140600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Ausone",
+      "Vintage": 2014,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 5,936"
+    },
+    {
+      "LWIN": "101385020100600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Pavie",
+      "Vintage": 2010,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,814"
+    },
+    {
+      "LWIN": "101322520030600750",
+      "Region": "Bordeaux",
+      "Wine Name": "La Mondotte",
+      "Vintage": 2003,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,930"
+    },
+    {
+      "LWIN": "100752120150600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Canon",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,720"
+    },
+    {
+      "LWIN": "101322520190600750",
+      "Region": "Bordeaux",
+      "Wine Name": "La Mondotte",
+      "Vintage": 2019,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 1,761"
+    },
+    {
+      "LWIN": "100604520150600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Angelus",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,351"
+    },
+    {
+      "LWIN": "100642320160600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Beausejour Duffau-Lagarrosse",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 1,469"
+    },
+    {
+      "LWIN": "101218520180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Larcis Ducasse",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 1,150"
+    },
+    {
+      "LWIN": "100810820100600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Cheval Blanc",
+      "Vintage": 2010,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 10,516"
+    },
+    {
+      "LWIN": "101278119960600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Margaux",
+      "Vintage": 1996,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 9,464"
+    },
+    {
+      "LWIN": "101278120150600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Margaux",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 14,824"
+    },
+    {
+      "LWIN": "101365820150600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Palmer",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 5,475"
+    },
+    {
+      "LWIN": "101231620000600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Latour",
+      "Vintage": 2000,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 13,578"
+    },
+    {
+      "LWIN": "101187220050600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Lafite Rothschild",
+      "Vintage": 2005,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 13,374"
+    },
+    {
+      "LWIN": "101354420180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Mouton Rothschild",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 8,295"
+    },
+    {
+      "LWIN": "101417620180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Pichon Lalande",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,584"
+    },
+    {
+      "LWIN": "101430720100600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Pontet Canet",
+      "Vintage": 2010,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,495"
+    },
+    {
+      "LWIN": "101354420190600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Mouton Rothschild",
+      "Vintage": 2019,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,731"
+    },
+    {
+      "LWIN": "101430720090600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Pontet Canet",
+      "Vintage": 2009,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,128"
+    },
+    {
+      "LWIN": "101124719890600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Haut-Brion",
+      "Vintage": 1989,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 25,735"
+    },
+    {
+      "LWIN": "101317920050600750",
+      "Region": "Bordeaux",
+      "Wine Name": "La Mission Haut-Brion",
+      "Vintage": 2005,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 7,384"
+    },
+    {
+      "LWIN": "101369020100600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Pape Clement",
+      "Vintage": 2010,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,631"
+    },
+    {
+      "LWIN": "101119120180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Haut-Bailly",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 1,407"
+    },
+    {
+      "LWIN": "101526120180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Smith Haut Lafitte",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 1,401"
+    },
+    {
+      "LWIN": "101329620100600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Montrose",
+      "Vintage": 2010,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,801"
+    },
+    {
+      "LWIN": "100878820160600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Cos d'Estournel",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,441"
+    },
+    {
+      "LWIN": "100747520180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Calon Segur",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 1,591"
+    },
+    {
+      "LWIN": "100947920160600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Ducru-Beaucaillou",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,665"
+    },
+    {
+      "LWIN": "101237420180600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Leoville Las Cases",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,155"
+    },
+    {
+      "LWIN": "101238720190600750",
+      "Region": "Bordeaux",
+      "Wine Name": "Leoville Poyferre",
+      "Vintage": 2019,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 979"
+    },
+    {
+      "LWIN": "101775720150600750",
+      "Region": "Bordeaux",
+      "Wine Name": "D'Yquem",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,099"
+    },
+    {
+      "LWIN": "107892720160600750",
+      "Region": "Burgundy",
+      "Wine Name": "Ramonet Batard-Montrachet Grand Cru",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 8,812"
+    },
+    {
+      "LWIN": "106512320180600750",
+      "Region": "Burgundy",
+      "Wine Name": "Marc Colin et Fils Batard Montrachet Grand Cru",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,221"
+    },
+    {
+      "LWIN": "106716920190600750",
+      "Region": "Burgundy",
+      "Wine Name": "Joseph Drouhin Batard-Montrachet Grand Cru",
+      "Vintage": 2019,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 5,861"
+    },
+    {
+      "LWIN": "101919719960600750",
+      "Region": "Burgundy",
+      "Wine Name": "D'Auvenay Bonnes-Mares Grand Cru",
+      "Vintage": 1996,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 86,071"
+    },
+    {
+      "LWIN": "102677120190600750",
+      "Region": "Burgundy",
+      "Wine Name": "Comte Georges de Vogue Bonnes-Mares Grand Cru",
+      "Vintage": 2019,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 10,879"
+    },
+    {
+      "LWIN": "105678920130600750",
+      "Region": "Burgundy",
+      "Wine Name": "Georges Roumier Bonnes-Mares Grand Cru",
+      "Vintage": 2013,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 17,161"
+    },
+    {
+      "LWIN": "103048420160600750",
+      "Region": "Burgundy",
+      "Wine Name": "Dujac Bonnes-Mares Grand Cru",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 11,654"
+    },
+    {
+      "LWIN": "104511020150600750",
+      "Region": "Burgundy",
+      "Wine Name": "Georges Lignier Bonnes-Mares Grand Cru",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,848"
+    },
+    {
+      "LWIN": "105700520160600750",
+      "Region": "Burgundy",
+      "Wine Name": "Armand Rousseau Chambertin Grand Cru",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 43,392"
+    },
+    {
+      "LWIN": "176231220180600750",
+      "Region": "Burgundy",
+      "Wine Name": "Jean-Marie Fourrier Chambertin Grand Cru Vv",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 8,057"
+    },
+    {
+      "LWIN": "162886120180600750",
+      "Region": "Burgundy",
+      "Wine Name": "Laurent Ponsot Chambertin Grand Cru Cuvee du Chene",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,731"
+    },
+    {
+      "LWIN": "102870420020600750",
+      "Region": "Burgundy",
+      "Wine Name": "Domaine de la Romanee-Conti La Tache Grand Cru",
+      "Vintage": 2002,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 103,076"
+    },
+    {
+      "LWIN": "102687220190600750",
+      "Region": "Burgundy",
+      "Wine Name": "Comte Georges de Vogue Musigny Grand Cru VV",
+      "Vintage": 2019,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 16,318"
+    },
+    {
+      "LWIN": "103066020060600750",
+      "Region": "Burgundy",
+      "Wine Name": "Dujac Romanee Saint Vivant Grand Cru",
+      "Vintage": 2006,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 29,067"
+    },
+    {
+      "LWIN": "104278620050600750",
+      "Region": "Burgundy",
+      "Wine Name": "Lucien Le Moine Romanee Saint Vivant Grand Cru",
+      "Vintage": 2005,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 16,638"
+    },
+    {
+      "LWIN": "180762619960600750",
+      "Region": "Champagne",
+      "Wine Name": "Salon Le Mesnil",
+      "Vintage": 1996,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 15,387"
+    },
+    {
+      "LWIN": "131438019960600750",
+      "Region": "Champagne",
+      "Wine Name": "Taittinger Comtes de Champagne Rose",
+      "Vintage": 1996,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 8,166"
+    },
+    {
+      "LWIN": "108254219960600750",
+      "Region": "Champagne",
+      "Wine Name": "Louis Roederer Cristal",
+      "Vintage": 1996,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,670"
+    },
+    {
+      "LWIN": "108286119960600750",
+      "Region": "Champagne",
+      "Wine Name": "Pol Roger Sir Winston Churchill",
+      "Vintage": 1996,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,235"
+    },
+    {
+      "LWIN": "108180619960600750",
+      "Region": "Champagne",
+      "Wine Name": "Bollinger RD",
+      "Vintage": 1996,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,365"
+    },
+    {
+      "LWIN": "108286120080600750",
+      "Region": "Champagne",
+      "Wine Name": "Pol Roger Sir Winston Churchill",
+      "Vintage": 2008,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,332"
+    },
+    {
+      "LWIN": "108254220080600750",
+      "Region": "Champagne",
+      "Wine Name": "Louis Roederer Cristal",
+      "Vintage": 2008,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,026"
+    },
+    {
+      "LWIN": "174060820080600750",
+      "Region": "Champagne",
+      "Wine Name": "Dom Perignon Legacy",
+      "Vintage": 2008,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,441"
+    },
+    {
+      "LWIN": "185951120080600750",
+      "Region": "Champagne",
+      "Wine Name": "Dom Perignon Lenny Kravitz",
+      "Vintage": 2008,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,339"
+    },
+    {
+      "LWIN": "148124420080600750",
+      "Region": "Champagne",
+      "Wine Name": "Billecart-Salmon Cuvee Elisabeth Salmon Brut Rose",
+      "Vintage": 2008,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,332"
+    },
+    {
+      "LWIN": "108265620080600750",
+      "Region": "Champagne",
+      "Wine Name": "Dom Perignon",
+      "Vintage": 2008,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,312"
+    },
+    {
+      "LWIN": "108178920080600750",
+      "Region": "Champagne",
+      "Wine Name": "Bollinger La Grande Annee",
+      "Vintage": 2008,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,176"
+    },
+    {
+      "LWIN": "131437720080600750",
+      "Region": "Champagne",
+      "Wine Name": "Taittinger Comtes de Champagne Blanc de Blancs",
+      "Vintage": 2008,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,135"
+    },
+    {
+      "LWIN": "108310320080600750",
+      "Region": "Champagne",
+      "Wine Name": "Veuve Clicquot Grande Dame Rose",
+      "Vintage": 2008,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,917"
+    },
+    {
+      "LWIN": "117922020020600750",
+      "Region": "Champagne",
+      "Wine Name": "Egly-Ouriet Brut Grand Cru Millesime",
+      "Vintage": 2002,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,827"
+    },
+    {
+      "LWIN": "131693520020600750",
+      "Region": "Champagne",
+      "Wine Name": "Krug",
+      "Vintage": 2002,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,691"
+    },
+    {
+      "LWIN": "112220020150600750",
+      "Region": "California",
+      "Wine Name": "Harlan Estate Proprietary Red",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 14,618"
+    },
+    {
+      "LWIN": "113054620130600750",
+      "Region": "California",
+      "Wine Name": "Bond St. Eden",
+      "Vintage": 2013,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 8,329"
+    },
+    {
+      "LWIN": "123641120160600750",
+      "Region": "California",
+      "Wine Name": "Paul Hobbs Cabernet Sauvignon Beckstoffer To Kalon",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,364"
+    },
+    {
+      "LWIN": "112275020130600750",
+      "Region": "California",
+      "Wine Name": "Dominus Estate",
+      "Vintage": 2013,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 5,033"
+    },
+    {
+      "LWIN": "112266220130600750",
+      "Region": "California",
+      "Wine Name": "Opus One",
+      "Vintage": 2013,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,583"
+    },
+    {
+      "LWIN": "112266220160600750",
+      "Region": "California",
+      "Wine Name": "Opus One",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,039"
+    },
+    {
+      "LWIN": "114120320010600750",
+      "Region": "California",
+      "Wine Name": "Hundred Acre Kayli Morgan",
+      "Vintage": 2001,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 7,649"
+    },
+    {
+      "LWIN": "113663620150600750",
+      "Region": "California",
+      "Wine Name": "Bond Vecina",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 7,166"
+    },
+    {
+      "LWIN": "112340920130600750",
+      "Region": "California",
+      "Wine Name": "Stag's Leap Cask 23 Cabernet Sauvignon",
+      "Vintage": 2013,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,590"
+    },
+    {
+      "LWIN": "112143420130600750",
+      "Region": "California",
+      "Wine Name": "Eisele Vineyard Cabernet Sauvignon",
+      "Vintage": 2013,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,330"
+    },
+    {
+      "LWIN": "118654320160600750",
+      "Region": "California",
+      "Wine Name": "Continuum",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,243"
+    },
+    {
+      "LWIN": "139365720170600750",
+      "Region": "California",
+      "Wine Name": "TOR Beckstoffer To Kalon Cabernet Sauvignon",
+      "Vintage": 2017,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,992"
+    },
+    {
+      "LWIN": "112298120130600750",
+      "Region": "California",
+      "Wine Name": "Joseph Phelps Insignia",
+      "Vintage": 2013,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,726"
+    },
+    {
+      "LWIN": "132152820140600750",
+      "Region": "California",
+      "Wine Name": "Realm Napa The Bard",
+      "Vintage": 2014,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,021"
+    },
+    {
+      "LWIN": "114274720160600750",
+      "Region": "California",
+      "Wine Name": "Inglenook Rubicon",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 1,825"
+    },
+    {
+      "LWIN": "161969020160600750",
+      "Region": "Rhone",
+      "Wine Name": "Rene Rostaing Cote-Rotie Cote Brune",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 15,733"
+    },
+    {
+      "LWIN": "110964520140600750",
+      "Region": "Rhone",
+      "Wine Name": "Chapoutier Ermitage L'Ermite Blanc",
+      "Vintage": 2014,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 7,561"
+    },
+    {
+      "LWIN": "111506220070600750",
+      "Region": "Rhone",
+      "Wine Name": "Domaine du Pegau Cuvee du Capo Chateauneuf du Pape",
+      "Vintage": 2007,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 5,711"
+    },
+    {
+      "LWIN": "111320220090600750",
+      "Region": "Rhone",
+      "Wine Name": "Guigal Cote-Rotie La Mouline",
+      "Vintage": 2009,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,991"
+    },
+    {
+      "LWIN": "111321520170600750",
+      "Region": "Rhone",
+      "Wine Name": "Guigal Cote-Rotie La Turque",
+      "Vintage": 2017,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,759"
+    },
+    {
+      "LWIN": "111319820090600750",
+      "Region": "Rhone",
+      "Wine Name": "Guigal Cote-Rotie La Landonne",
+      "Vintage": 2009,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,263"
+    },
+    {
+      "LWIN": "113460320170600750",
+      "Region": "Rhone",
+      "Wine Name": "Jean-Louis Chave Hermitage Blanc",
+      "Vintage": 2017,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,400"
+    },
+    {
+      "LWIN": "117048720100600750",
+      "Region": "Rhone",
+      "Wine Name": "Roger Sabon Chateauneuf-du-Pape Le Secret des Sabon",
+      "Vintage": 2010,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,323"
+    },
+    {
+      "LWIN": "110965820100600750",
+      "Region": "Rhone",
+      "Wine Name": "Chapoutier Ermitage De L'Oree Blanc",
+      "Vintage": 2010,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,296"
+    },
+    {
+      "LWIN": "111356320150600750",
+      "Region": "Rhone",
+      "Wine Name": "Paul Jaboulet Aine Hermitage La Chapelle",
+      "Vintage": 2015,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,808"
+    },
+    {
+      "LWIN": "100428520130600750",
+      "Region": "South Australia",
+      "Wine Name": "Penfolds Grange Bin 95",
+      "Vintage": 2013,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 5,895"
+    },
+    {
+      "LWIN": "100526620040600750",
+      "Region": "South Australia",
+      "Wine Name": "Two Hands My Hands Shiraz",
+      "Vintage": 2004,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 4,236"
+    },
+    {
+      "LWIN": "154493220040600750",
+      "Region": "South Australia",
+      "Wine Name": "Chris Ringland Dry Grown Barossa",
+      "Vintage": 2004,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 6,711"
+    },
+    {
+      "LWIN": "100153220100600750",
+      "Region": "South Australia",
+      "Wine Name": "Clarendon Hills Astralis Shiraz",
+      "Vintage": 2010,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 3,332"
+    },
+    {
+      "LWIN": "100507720160600750",
+      "Region": "South Australia",
+      "Wine Name": "Torbreck RunRig",
+      "Vintage": 2016,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,924"
+    },
+    {
+      "LWIN": "113689620190600750",
+      "Region": "New South Wales",
+      "Wine Name": "Clonakilla Shiraz Viognier",
+      "Vintage": 2019,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,540"
+    },
+    {
+      "LWIN": "100507720180600750",
+      "Region": "South Australia",
+      "Wine Name": "Torbreck RunRig",
+      "Vintage": 2018,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 2,509"
+    },
+    {
+      "LWIN": "100286120020600750",
+      "Region": "South Australia",
+      "Wine Name": "Henschke Cyril Henschke Cabernet Sauvignon",
+      "Vintage": 2002,
+      "Pack Size": "6x75cl",
+      "Market Price (US$)": "USD 1,414"
+    }
+   ]

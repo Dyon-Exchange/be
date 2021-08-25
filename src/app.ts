@@ -50,12 +50,12 @@ app.use(index.routes()).use(index.allowedMethods());
   await orderbook.HealthCheck();
 })();
 
-// Every 1 minute
-cron
-  .schedule("*/10 * * * *", async () => {
-    await Orderbook.UpdateMarketPrices();
-  })
-  .start();
+// // Every 1 minute
+// cron
+//   .schedule("*/10 * * * *", async () => {
+//     await Orderbook.UpdateMarketPrices();
+//   })
+//   .start();
 
 // // Every day at 1am
 // cron
