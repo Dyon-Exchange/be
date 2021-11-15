@@ -131,7 +131,7 @@ router.route({
       } else {
         ctx.response.status = 404;
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log("error", e);
       ctx.throw(400, e);
     }

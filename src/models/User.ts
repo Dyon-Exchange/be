@@ -39,7 +39,7 @@ export class User extends TimeStamps {
     required: true,
     unique: true,
     validate: {
-      validator: (v) => isEmail(v),
+      validator: (v: string) => isEmail(v),
       message: "Value is not an email address.",
     },
   })
@@ -91,11 +91,9 @@ export class User extends TimeStamps {
         productIdentifier,
         quantity,
       });
-      // @ts-ignore
-      await this.save();
+      await (this as any).save();
     } else {
-      // @ts-ignore
-      await this.update(
+      await (this as any).update(
         {
           $set: {
             "assets.$[el].quantity": this.assets[index].quantity + quantity,
@@ -128,8 +126,7 @@ export class User extends TimeStamps {
       if (this.assets[index].quantity - quantity === 0) {
         this.assets.splice(index, 1);
       } else {
-        // @ts-ignore
-        await this.update(
+        await (this as any).update(
           {
             $set: {
               "assets.$[el].quantity": this.assets[index].quantity - quantity,
@@ -162,8 +159,7 @@ export class User extends TimeStamps {
     } else {
       throw new Error("Invalid order side");
     }
-    // @ts-ignore
-    await this.save();
+    await (this as any).save();
   }
 
   /**
@@ -180,8 +176,7 @@ export class User extends TimeStamps {
     } else {
       throw new Error("Invalid order side");
     }
-    // @ts-ignore
-    await this.save();
+    await (this as any).save();
   }
 
   /*
@@ -200,12 +195,10 @@ export class User extends TimeStamps {
     side: OrderSide
   ): Promise<boolean> {
     const otherSide = side === "ASK" ? "BID" : "ASK";
-    //@ts-ignore
     const orders = await LimitOrder.find({
       productIdentifier,
       side: otherSide,
-      // @ts-ignore
-      userId: this._id,
+      userId: (this as any)._id,
       status: "PENDING",
     });
     console.log({ orders });

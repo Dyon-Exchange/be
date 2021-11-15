@@ -71,7 +71,7 @@ router.route({
         unitSize: "(6x75cl)",
         changeAmount: "",
         changePercentage: "",
-      });
+      } as any);
 
       token = await Token.create({
         productCode,
@@ -82,8 +82,8 @@ router.route({
         tokenId: `${productCode}${caseId}${locationId}${taxCode}${conditionCode}`,
         productIdentifier: `${productCode}${locationId}${taxCode}${conditionCode}`,
         supply,
-      });
-    } catch (e) {
+      } as any);
+    } catch (e: any) {
       ctx.throw(400, e);
     }
 

@@ -122,7 +122,7 @@ router.put(
     try {
       await asset.uploadImage(ctx.file);
       await asset.save();
-    } catch (e) {
+    } catch (e: any) {
       ctx.throw(500, e.message);
     }
     ctx.body = asset;
