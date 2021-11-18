@@ -2,6 +2,72 @@
 
 Koa.js backend for Dyon exchange. Uses MongoDB database.
 
+## High Level Overview - Entire Architecture
+
+The intent of this section is to offer a high level overview of the functioning of the Dyon wine orderbook exchange application.
+
+There are notes included in this section to guide future devs in easily transitioning to work on this project.
+​
+## General Purchase Flow
+​
+                                                                                 user +
+                                                 ┌──────────────────────────┐ 4. order status updated
+                                                 │                          │    in db
+                                                 │                      ┌───┴──┐
+                                                 │   ┌─────────────────►│      │
+                                                 ▼   │                  │      │
+┌─────────┐                                     ┌────┴──────────────┐   │      │
+│         │         1. user places order        │                   ├──►│  db  │
+│  front  │            from front end           │                   │   │      │
+│         ├────────────────────────────────────►│                   │   │      │
+│   end   │                                     │    node server    │   │      │
+│         │◄────────────────────────────────────┤                   │◄──┤      │
+└─────────┘         5. user is provided with    │                   │   └──────┘
+                       a response on their      │                   │   2. order stored in db
+                       order status             │                   │
+                                                │                   │
+                                                │                   │
+                                                │                   │
+                                                └───────────────┬───┘
+                                                         ▲      │
+                                                         │      │ 3. node server passes
+                                                         │      │    request to go orderbook
+                                                         │      │    the orderbook server will
+                                                         │      │    process all transactions
+                                                         │      │    possible and return relevant
+                                                         │      │    data
+                                                         │      │
+  note: the productIdentifier                            │      │3a. Unfilled orders are eventually
+  corresponds to ids of these tokens.                    │      │    filled by an order on the other
+  users making these orders will have                    │      ▼    side of the trade
+  ownership details stored in their               ┌──────┴─────────┐
+  document in users collection.                   │                │
+  ┌───────────────────┐                           │                │
+  │                   │                           │                │
+  │                   │                           │    orderbook   │
+  │                   │                           │                │
+  │       dyon        │                           │                │
+  │  smart contract   │                           │                │
+  │                   │                           │                │
+  │                   │                           └────────────────┘
+  │                   │
+  │                   │
+  │                   │
+  └───────────────────┘
+​
+The above diagram illustrates general purchase flow. The orderbook server currently runs in memory, meaning that in the event of 
+a crash all pending orders will be lost. Running the server in memory ensures minimum latency in processing transactions, which scale significantly with increased exchange use. To mitigate the problems associated with losing data, new developers should consider:
+​
+- Writing and maintaining a script to reconstruct the state of the orderbook from the mongodb entries written by the node server
+- Adding a persistent redis in-memory cache the go server can interact with to ensure persistence in case of crash, making the reconstruct script a last resort. More information is available here: https://redis.io/topics/persistence
+- Devops in the production environment should be implemented with careful attention to memory management and redundancy - even with persistence, if memory needs are not serviced appropriately the container of the application may fail to meet demands.
+​
+## Updating Market Prices
+​
+Market prices are currently calculated via a google cloud cron job pinging the orderbook server. In a move to a production environment, the future development team may consider switching from a http to a websocket implementation.
+​
+The cron job is available for local development in app.ts of the back end repository, currently commented out. The future development team may consider extracting this out to its own small app housed in a backend subdirectory.
+
 ### Running Locally
 
 Of course, first run `npm install`, etc. 
