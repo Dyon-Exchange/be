@@ -8,7 +8,7 @@ The intent of this section is to offer a high level overview of the functioning 
 
 There are notes included in this section to guide future devs in easily transitioning to work on this project.
 ​
-## General Purchase Flow
+### General Purchase Flow
 ​
                                                                                  user +
                                                  ┌──────────────────────────┐ 4. order status updated
@@ -62,13 +62,13 @@ a crash all pending orders will be lost. Running the server in memory ensures mi
 - Adding a persistent redis in-memory cache the go server can interact with to ensure persistence in case of crash, making the reconstruct script a last resort. More information is available here: https://redis.io/topics/persistence
 - Devops in the production environment should be implemented with careful attention to memory management and redundancy - even with persistence, if memory needs are not serviced appropriately the container of the application may fail to meet demands.
 ​
-## Updating Market Prices
+### Updating Market Prices
 ​
 Market prices are currently calculated via a google cloud cron job pinging the orderbook server. In a move to a production environment, the future development team may consider switching from a http to a websocket implementation.
 ​
 The cron job is available for local development in app.ts of the back end repository, currently commented out. The future development team may consider extracting this out to its own small app housed in a backend subdirectory.
 
-### Running Locally
+## Running Locally
 
 Of course, first run `npm install`, etc. 
 
@@ -82,15 +82,15 @@ Return to your node backend folder. Run the following script: `npx ts-node scrip
 
 Lastly run your front end with the `npm start` command. You should be abe to develop locally now.
 
-### Custom NPM package
+## Custom NPM package
 
 The smart contract API is exposed as a custom NPM [package](https://gitlab.com/winebit/dyon-contracts) to allow for code separation.
 
-### Scripts
+## Scripts
 
 In the `/scripts` directory there is some scripts used for populating the DB with data quickly so it is possible to get back to a known good state ready to test the platform.
 
-### Cron Jobs
+## Cron Jobs
 
 2 cron jobs are used for updating the market prices and updating the change percentage over the past 24 hours for all assets.
 
